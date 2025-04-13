@@ -82,6 +82,13 @@ const PatientProfile = () => {
     ],
   });
 
+  const generateAvatarUrl = (name, gender) => {
+    const backgroundColor = gender === "Male" ? "2563EB" : "DB2777";
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      name
+    )}&background=${backgroundColor}&color=ffffff&size=128`;
+  };
+
   const handleBookAppointment = () => {
     navigate("/client/find-doctor");
   };
@@ -102,7 +109,7 @@ const PatientProfile = () => {
           <div className="flex items-center space-x-6">
             <div className="relative">
               <img
-                src={`https://ui-avatars.com/api/?name=${patient.name}&size=128&background=0D8ABC&color=fff`}
+                src={generateAvatarUrl(patient.name, patient.gender)}
                 alt={patient.name}
                 className="w-32 h-32 rounded-full shadow-lg border-4 border-white"
               />
