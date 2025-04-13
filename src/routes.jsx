@@ -1,0 +1,65 @@
+// src/routes.jsx
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import ClientProfile from "./pages/ClientProfile";
+import DoctorDirectory from "./pages/DoctorDirectory";
+import AppointmentPage from "./pages/AppointmentPage";
+import HealthTracker from "./pages/HealthTracker";
+import DoctorDashboard from "./pages/DoctorDashboard";
+
+const AppRoutes = ({ userRole }) => {
+  return (
+    <Routes>
+      {/* Default route */}
+      <Route
+        path="/"
+        element={
+          <Navigate
+            to={
+              userRole === "client" ? "/client/dashboard" : "/doctor/dashboard"
+            }
+            replace
+          />
+        }
+      />
+
+      {/* Client Routes */}
+      <Route path="/client/dashboard" element={<Dashboard />} />
+      <Route path="/client/profile" element={<ClientProfile />} />
+      <Route path="/client/health-tracker" element={<HealthTracker />} />
+      <Route path="/client/find-doctor" element={<DoctorDirectory />} />
+
+      {/* Doctor Routes */}
+      <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+      <Route path="/doctor/appointments" element={<AppointmentPage />} />
+      <Route path="/doctor/patients" element={<ClientProfile />} />
+
+      {/* Catch-all route for 404 */}
+      <Route
+        path="*"
+        element={
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full text-center">
+              <span className="text-5xl mb-4 block">🤔</span>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                Page Not Found
+              </h1>
+              <p className="text-gray-600 mb-4">
+                The page you're looking for doesn't exist or has been moved.
+              </p>
+              <button
+                onClick={() => window.history.back()}
+                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        }
+      />
+    </Routes>
+  );
+};
+
+export default AppRoutes;

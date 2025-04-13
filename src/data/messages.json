@@ -1,0 +1,170 @@
+[
+    {
+        "id": 1,
+        "conversationId": "CONV001",
+        "patientId": 1,
+        "doctorId": 1,
+        "sender": "patient",
+        "message": "Hello Dr. Johnson, I've been experiencing some chest discomfort lately.",
+        "timestamp": "2025-04-13T09:00:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 2,
+        "conversationId": "CONV001",
+        "patientId": 1,
+        "doctorId": 1,
+        "sender": "doctor",
+        "message": "Hello Mr. Doe, I'm sorry to hear that. Can you describe the nature of the discomfort and when it occurs?",
+        "timestamp": "2025-04-13T09:02:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 3,
+        "conversationId": "CONV001",
+        "patientId": 1,
+        "doctorId": 1,
+        "sender": "patient",
+        "message": "It's a tight feeling in my chest, usually after climbing stairs. Sometimes with shortness of breath.",
+        "timestamp": "2025-04-13T09:05:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 4,
+        "conversationId": "CONV001",
+        "patientId": 1,
+        "doctorId": 1,
+        "sender": "doctor",
+        "message": "Given your symptoms, we should schedule an appointment right away. I have an opening tomorrow at 9:00 AM. Would that work for you?",
+        "timestamp": "2025-04-13T09:07:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 5,
+        "conversationId": "CONV002",
+        "patientId": 2,
+        "doctorId": 5,
+        "sender": "patient",
+        "message": "Dr. Thompson, I noticed a new mole on my back that seems to have changed color.",
+        "timestamp": "2025-04-13T10:30:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 6,
+        "conversationId": "CONV002",
+        "patientId": 2,
+        "doctorId": 5,
+        "sender": "patient",
+        "message": "Here's a photo of the mole.",
+        "timestamp": "2025-04-13T10:31:00Z",
+        "read": true,
+        "type": "image",
+        "attachmentUrl": "/attachments/mole-image-001.jpg"
+    },
+    {
+        "id": 7,
+        "conversationId": "CONV002",
+        "patientId": 2,
+        "doctorId": 5,
+        "sender": "doctor",
+        "message": "Thank you for the photo. While it's important to get this checked in person, from the image, I can see some irregularity in the borders. Let's schedule an appointment for a proper examination.",
+        "timestamp": "2025-04-13T10:35:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 8,
+        "conversationId": "CONV003",
+        "patientId": 4,
+        "doctorId": 3,
+        "sender": "patient",
+        "message": "Dr. Rodriguez, Michael has been having a fever since last night.",
+        "timestamp": "2025-04-13T15:00:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 9,
+        "conversationId": "CONV003",
+        "patientId": 4,
+        "doctorId": 3,
+        "sender": "doctor",
+        "message": "What's his current temperature? Is he experiencing any other symptoms?",
+        "timestamp": "2025-04-13T15:02:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 10,
+        "conversationId": "CONV003",
+        "patientId": 4,
+        "doctorId": 3,
+        "sender": "patient",
+        "message": "101.2°F. He also has a slight cough and seems tired.",
+        "timestamp": "2025-04-13T15:05:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 11,
+        "conversationId": "CONV004",
+        "patientId": 6,
+        "doctorId": 7,
+        "sender": "patient",
+        "message": "Dr. Garcia, I've been following the anxiety management techniques you suggested. They're really helping.",
+        "timestamp": "2025-04-13T16:00:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 12,
+        "conversationId": "CONV004",
+        "patientId": 6,
+        "doctorId": 7,
+        "sender": "doctor",
+        "message": "That's wonderful to hear! Have you been keeping the anxiety journal we discussed?",
+        "timestamp": "2025-04-13T16:05:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 13,
+        "conversationId": "CONV004",
+        "patientId": 6,
+        "doctorId": 7,
+        "sender": "patient",
+        "message": "Yes, I've attached my weekly log.",
+        "timestamp": "2025-04-13T16:07:00Z",
+        "read": true,
+        "type": "file",
+        "attachmentUrl": "/attachments/anxiety-log-week12.pdf"
+    },
+    {
+        "id": 14,
+        "conversationId": "CONV005",
+        "patientId": 7,
+        "doctorId": 4,
+        "sender": "patient",
+        "message": "Dr. Wilson, how long should I continue with the physical therapy exercises?",
+        "timestamp": "2025-04-13T14:00:00Z",
+        "read": true,
+        "type": "text"
+    },
+    {
+        "id": 15,
+        "conversationId": "CONV005",
+        "patientId": 7,
+        "doctorId": 4,
+        "sender": "doctor",
+        "message": "Please continue with the exercises for at least 4 more weeks. Here's a video demonstrating the proper technique for the new exercises we discussed.",
+        "timestamp": "2025-04-13T14:10:00Z",
+        "read": false,
+        "type": "video",
+        "attachmentUrl": "/attachments/pt-exercises-guide.mp4"
+    }
+]

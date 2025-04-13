@@ -1,0 +1,329 @@
+{
+  "vitals": {
+    "dailyReadings": [
+      {
+        "date": "2025-04-13",
+        "heartRate": 72,
+        "bloodPressure": {
+          "systolic": 121,
+          "diastolic": 81
+        },
+        "temperature": 98.6,
+        "oxygenLevel": 98,
+        "weight": 149.3,
+        "glucose": 92,
+        "sleepHours": 7.5,
+        "steps": 8500,
+        "caloriesBurned": 2100
+      },
+      {
+        "date": "2025-04-12",
+        "heartRate": 74,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.4,
+        "oxygenLevel": 97,
+        "weight": 149.0,
+        "glucose": 90,
+        "sleepHours": 8.0,
+        "steps": 10200,
+        "caloriesBurned": 2300
+      },
+      {
+        "date": "2025-04-11",
+        "heartRate": 70,
+        "bloodPressure": {
+          "systolic": 119,
+          "diastolic": 78
+        },
+        "temperature": 98.6,
+        "oxygenLevel": 98,
+        "weight": 149.5,
+        "glucose": 93,
+        "sleepHours": 7.2,
+        "steps": 7800,
+        "caloriesBurned": 2000
+      },
+      {
+        "date": "2025-04-10",
+        "heartRate": 73,
+        "bloodPressure": {
+          "systolic": 121,
+          "diastolic": 81
+        },
+        "temperature": 98.5,
+        "oxygenLevel": 98,
+        "weight": 149.2,
+        "glucose": 91,
+        "sleepHours": 7.8,
+        "steps": 9300,
+        "caloriesBurned": 2200
+      },
+      {
+        "date": "2025-04-09",
+        "heartRate": 71,
+        "bloodPressure": {
+          "systolic": 118,
+          "diastolic": 79
+        },
+        "temperature": 98.7,
+        "oxygenLevel": 99,
+        "weight": 149.8,
+        "glucose": 94,
+        "sleepHours": 6.5,
+        "steps": 6500,
+        "caloriesBurned": 1900
+      },
+      {
+        "date": "2025-04-08",
+        "heartRate": 75,
+        "bloodPressure": {
+          "systolic": 122,
+          "diastolic": 82
+        },
+        "temperature": 98.4,
+        "oxygenLevel": 97,
+        "weight": 149.5,
+        "glucose": 92,
+        "sleepHours": 7.0,
+        "steps": 8800,
+        "caloriesBurned": 2150
+      },
+      {
+        "date": "2025-04-07",
+        "heartRate": 72,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.6,
+        "oxygenLevel": 98,
+        "weight": 150.0,
+        "glucose": 95,
+        "sleepHours": 8.2,
+        "steps": 9500,
+        "caloriesBurned": 2250
+      }
+    ],
+    "monthlyReadings": [
+      {
+        "date": "2025-04",
+        "heartRate": 73,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.5,
+        "oxygenLevel": 98,
+        "weight": 149.5,
+        "glucose": 93,
+        "averageSleepHours": 7.5,
+        "averageSteps": 8800,
+        "averageCaloriesBurned": 2100
+      },
+      {
+        "date": "2025-03",
+        "heartRate": 72,
+        "bloodPressure": {
+          "systolic": 119,
+          "diastolic": 79
+        },
+        "temperature": 98.6,
+        "oxygenLevel": 97,
+        "weight": 150.0,
+        "glucose": 92,
+        "averageSleepHours": 7.3,
+        "averageSteps": 8500,
+        "averageCaloriesBurned": 2050
+      },
+      {
+        "date": "2025-02",
+        "heartRate": 74,
+        "bloodPressure": {
+          "systolic": 121,
+          "diastolic": 81
+        },
+        "temperature": 98.4,
+        "oxygenLevel": 98,
+        "weight": 151.0,
+        "glucose": 94,
+        "averageSleepHours": 7.1,
+        "averageSteps": 8200,
+        "averageCaloriesBurned": 2000
+      },
+      {
+        "date": "2025-01",
+        "heartRate": 75,
+        "bloodPressure": {
+          "systolic": 122,
+          "diastolic": 82
+        },
+        "temperature": 98.2,
+        "oxygenLevel": 98,
+        "glucose": 95
+      },
+      {
+        "date": "2025-02",
+        "heartRate": 73,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.4,
+        "oxygenLevel": 97,
+        "glucose": 92
+      },
+      {
+        "date": "2025-03",
+        "heartRate": 74,
+        "bloodPressure": {
+          "systolic": 118,
+          "diastolic": 78
+        },
+        "temperature": 98.1,
+        "oxygenLevel": 99,
+        "glucose": 94
+      },
+      {
+        "date": "2025-04",
+        "heartRate": 72,
+        "bloodPressure": {
+          "systolic": 121,
+          "diastolic": 81
+        },
+        "temperature": 98.3,
+        "oxygenLevel": 98,
+        "glucose": 93
+      }
+    ],
+    "yearlyReadings": [
+      {
+        "date": "2025",
+        "heartRate": 73,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.5,
+        "oxygenLevel": 98,
+        "weight": 150.0,
+        "glucose": 93,
+        "averageSleepHours": 7.4,
+        "averageSteps": 8500,
+        "averageCaloriesBurned": 2050
+      },
+      {
+        "date": "2024",
+        "heartRate": 72,
+        "bloodPressure": {
+          "systolic": 118,
+          "diastolic": 78
+        },
+        "temperature": 98.6,
+        "oxygenLevel": 97,
+        "weight": 152.0,
+        "glucose": 91,
+        "averageSleepHours": 7.2,
+        "averageSteps": 8200,
+        "averageCaloriesBurned": 2000
+      },
+      {
+        "date": "2023",
+        "heartRate": 71,
+        "bloodPressure": {
+          "systolic": 119,
+          "diastolic": 79
+        },
+        "temperature": 98.4,
+        "oxygenLevel": 98,
+        "weight": 153.0,
+        "glucose": 92,
+        "averageSleepHours": 7.0,
+        "averageSteps": 8000,
+        "averageCaloriesBurned": 1950
+      },
+      {
+        "date": "2024",
+        "heartRate": 74,
+        "bloodPressure": {
+          "systolic": 120,
+          "diastolic": 80
+        },
+        "temperature": 98.2,
+        "oxygenLevel": 98,
+        "glucose": 94
+      },
+      {
+        "date": "2025",
+        "heartRate": 73,
+        "bloodPressure": {
+          "systolic": 119,
+          "diastolic": 79
+        },
+        "temperature": 98.3,
+        "oxygenLevel": 97,
+        "glucose": 93
+      }
+    ],
+    "normalRanges": {
+      "heartRate": {
+        "min": 60,
+        "max": 100,
+        "unit": "bpm",
+        "optimal": 70
+      },
+      "bloodPressure": {
+        "systolic": {
+          "min": 90,
+          "max": 120,
+          "unit": "mmHg",
+          "optimal": 115
+        },
+        "diastolic": {
+          "min": 60,
+          "max": 80,
+          "unit": "mmHg",
+          "optimal": 75
+        }
+      },
+      "temperature": {
+        "min": 97.8,
+        "max": 99.1,
+        "unit": "°F",
+        "optimal": 98.6
+      },
+      "oxygenLevel": {
+        "min": 95,
+        "max": 100,
+        "unit": "%",
+        "optimal": 98
+      },
+      "glucose": {
+        "min": 70,
+        "max": 100,
+        "unit": "mg/dL",
+        "optimal": 85
+      },
+      "sleepHours": {
+        "min": 7,
+        "max": 9,
+        "unit": "hours",
+        "optimal": 8
+      },
+      "steps": {
+        "min": 7000,
+        "max": 12000,
+        "unit": "steps",
+        "optimal": 10000
+      },
+      "caloriesBurned": {
+        "min": 1800,
+        "max": 2500,
+        "unit": "kcal",
+        "optimal": 2200
+      }
+    }
+  }
+}

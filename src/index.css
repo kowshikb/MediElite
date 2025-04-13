@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@layer components {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-800;
+  }
+
+  button {
+    @apply bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600;
+  }
+
+  input,
+  textarea {
+    @apply border border-gray-300 rounded-md p-2;
+  }
+
+  .table {
+    @apply min-w-full divide-y divide-gray-200;
+  }
+
+  .table th,
+  .table td {
+    @apply px-6 py-3 text-left text-sm font-medium text-gray-500;
+  }
+
+  .table th {
+    @apply bg-gray-50;
+  }
+
+  .table tr:hover {
+    @apply bg-gray-100;
+  }
+
+  /* Calendar Customization */
+  .react-calendar {
+    width: 100%;
+    border: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    font-family: system-ui, sans-serif;
+    padding: 1rem;
+    background: white;
+    font-family: inherit;
+  }
+
+  .react-calendar__navigation {
+    margin-bottom: 1.5rem;
+  }
+
+  .react-calendar__navigation button {
+    color: #374151;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    background: none;
+    font-size: 1.2em;
+    padding: 0.5em;
+  }
+
+  .react-calendar__navigation button:hover {
+    background-color: #eff6ff;
+  }
+
+  .react-calendar__navigation button:disabled {
+    background-color: #f3f4f6;
+  }
+
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    background-color: #e8f4ff;
+    color: #2563eb;
+  }
+
+  .react-calendar__month-view__weekdays {
+    color: #4b5563;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .react-calendar__month-view__days__day {
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  .react-calendar__month-view__days__day:hover {
+    background-color: #eff6ff;
+    transition: background-color 0.2s;
+  }
+
+  .react-calendar__tile {
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    padding: 1em 0.5em;
+    position: relative;
+    transition: all 0.2s ease;
+    aspect-ratio: 1;
+  }
+
+  .react-calendar__tile:hover {
+    background-color: #eff6ff;
+  }
+
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    background-color: #e8f4ff;
+    color: #2563eb;
+  }
+
+  .react-calendar__tile--now {
+    background-color: #fef3c7 !important;
+    color: #92400e;
+    font-weight: 600;
+  }
+
+  .react-calendar__tile--active {
+    background-color: #2563eb !important;
+    color: white !important;
+    font-weight: 600;
+  }
+
+  .react-calendar__tile--hasAppointment::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #2563eb;
+    border-radius: 50%;
+  }
+
+  .react-calendar__tile:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  .react-calendar__month-view__days {
+    gap: 0.5rem;
+    display: grid;
+  }
+
+  .time-slots-container {
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(229, 231, 235, 0.5);
+  }
+
+  /* Additional Component Styles */
+  .appointment-card {
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+
+  .health-metric-card {
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+
+  .profile-section {
+    @apply transition-all duration-300;
+  }
+}

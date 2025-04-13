@@ -1,0 +1,425 @@
+{
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Sarah Johnson",
+      "specialty": "Cardiology",
+      "subspecialty": "Interventional Cardiology",
+      "image": "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg",
+      "rating": 4.8,
+      "availability": true,
+      "experience": "15 years",
+      "qualifications": [
+        "MD",
+        "FACC",
+        "PhD in Cardiovascular Research"
+      ],
+      "languages": [
+        "English",
+        "Spanish"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Harvard Medical School",
+          "year": "2008"
+        },
+        {
+          "degree": "Cardiology Fellowship",
+          "institution": "Mayo Clinic",
+          "year": "2012"
+        }
+      ],
+      "schedule": {
+        "monday": "9:00 AM - 5:00 PM",
+        "tuesday": "9:00 AM - 5:00 PM",
+        "wednesday": "9:00 AM - 1:00 PM",
+        "thursday": "9:00 AM - 5:00 PM",
+        "friday": "9:00 AM - 4:00 PM"
+      },
+      "specializations": [
+        "Heart Disease Prevention",
+        "Cardiac Rehabilitation",
+        "Echocardiography"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Dr. Michael Chen",
+      "specialty": "Neurology",
+      "subspecialty": "Movement Disorders",
+      "image": "https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg",
+      "rating": 4.9,
+      "availability": true,
+      "experience": "12 years",
+      "qualifications": [
+        "MD",
+        "PhD",
+        "FAAN"
+      ],
+      "languages": [
+        "English",
+        "Mandarin",
+        "Cantonese"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Stanford University",
+          "year": "2011"
+        },
+        {
+          "degree": "Neurology Residency",
+          "institution": "Johns Hopkins Hospital",
+          "year": "2015"
+        }
+      ],
+      "schedule": {
+        "monday": "8:00 AM - 4:00 PM",
+        "tuesday": "8:00 AM - 4:00 PM",
+        "wednesday": "8:00 AM - 4:00 PM",
+        "thursday": "8:00 AM - 12:00 PM",
+        "friday": "8:00 AM - 4:00 PM"
+      },
+      "specializations": [
+        "Parkinson's Disease",
+        "Multiple Sclerosis",
+        "Epilepsy Management"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Dr. Emily Rodriguez",
+      "specialty": "Pediatrics",
+      "subspecialty": "Pediatric Endocrinology",
+      "image": "https://img.freepik.com/free-photo/young-female-doctor-white_155003-27079.jpg",
+      "rating": 4.7,
+      "availability": true,
+      "experience": "8 years",
+      "qualifications": [
+        "MD",
+        "FAAP"
+      ],
+      "languages": [
+        "English",
+        "Spanish",
+        "Portuguese"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "University of California, San Francisco",
+          "year": "2015"
+        },
+        {
+          "degree": "Pediatrics Residency",
+          "institution": "Boston Children's Hospital",
+          "year": "2018"
+        }
+      ],
+      "schedule": {
+        "monday": "9:00 AM - 5:00 PM",
+        "tuesday": "9:00 AM - 5:00 PM",
+        "wednesday": "9:00 AM - 5:00 PM",
+        "thursday": "9:00 AM - 5:00 PM",
+        "friday": "9:00 AM - 3:00 PM"
+      },
+      "specializations": [
+        "Growth Disorders",
+        "Diabetes Care",
+        "Thyroid Disorders"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Dr. James Wilson",
+      "specialty": "Orthopedics",
+      "subspecialty": "Sports Medicine",
+      "image": "https://img.freepik.com/free-photo/handsome-confident-male-doctor-wearing-white-coat-office_171337-9623.jpg",
+      "rating": 4.6,
+      "availability": true,
+      "experience": "20 years",
+      "qualifications": [
+        "MD",
+        "FAAOS",
+        "Sports Medicine Fellowship"
+      ],
+      "languages": [
+        "English",
+        "German"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Duke University",
+          "year": "2003"
+        },
+        {
+          "degree": "Orthopedic Surgery Residency",
+          "institution": "Hospital for Special Surgery",
+          "year": "2008"
+        }
+      ],
+      "schedule": {
+        "monday": "8:30 AM - 4:30 PM",
+        "tuesday": "8:30 AM - 4:30 PM",
+        "wednesday": "8:30 AM - 4:30 PM",
+        "thursday": "8:30 AM - 4:30 PM",
+        "friday": "8:30 AM - 2:30 PM"
+      },
+      "specializations": [
+        "Joint Replacement",
+        "Sports Injuries",
+        "Arthroscopic Surgery"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Dr. Lisa Thompson",
+      "specialty": "Dermatology",
+      "subspecialty": "Cosmetic Dermatology",
+      "image": "https://img.freepik.com/free-photo/attractive-young-female-doctor-with-stethoscope-isolated_1303-20441.jpg",
+      "rating": 4.9,
+      "availability": true,
+      "experience": "10 years",
+      "qualifications": [
+        "MD",
+        "FAAD",
+        "Aesthetic Medicine Certification"
+      ],
+      "languages": [
+        "English",
+        "French",
+        "Italian"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Yale School of Medicine",
+          "year": "2013"
+        },
+        {
+          "degree": "Dermatology Residency",
+          "institution": "NYU Langone",
+          "year": "2017"
+        }
+      ],
+      "schedule": {
+        "monday": "9:30 AM - 5:30 PM",
+        "tuesday": "9:30 AM - 5:30 PM",
+        "wednesday": "9:30 AM - 5:30 PM",
+        "thursday": "9:30 AM - 5:30 PM",
+        "friday": "9:30 AM - 3:30 PM"
+      },
+      "specializations": [
+        "Skin Cancer Screening",
+        "Laser Treatments",
+        "Anti-aging Procedures"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Dr. Robert Kim",
+      "specialty": "General Medicine",
+      "subspecialty": "Preventive Medicine",
+      "image": "https://img.freepik.com/free-photo/doctor-with-white-coat-stethoscope_144627-43687.jpg",
+      "rating": 4.5,
+      "availability": true,
+      "experience": "5 years",
+      "qualifications": [
+        "MD",
+        "MPH",
+        "Preventive Medicine Certification"
+      ],
+      "languages": [
+        "English",
+        "Korean",
+        "Japanese"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "University of Washington",
+          "year": "2018"
+        },
+        {
+          "degree": "Master of Public Health",
+          "institution": "Johns Hopkins Bloomberg School",
+          "year": "2020"
+        }
+      ],
+      "schedule": {
+        "monday": "8:00 AM - 4:00 PM",
+        "tuesday": "8:00 AM - 4:00 PM",
+        "wednesday": "8:00 AM - 4:00 PM",
+        "thursday": "8:00 AM - 4:00 PM",
+        "friday": "8:00 AM - 2:00 PM"
+      },
+      "specializations": [
+        "Preventive Care",
+        "Chronic Disease Management",
+        "Lifestyle Medicine"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Dr. Maria Garcia",
+      "specialty": "Psychiatry",
+      "subspecialty": "Child & Adolescent Psychiatry",
+      "image": "https://img.freepik.com/free-photo/female-doctor-hospital-with-stethoscope_23-2148827776.jpg",
+      "rating": 4.8,
+      "availability": true,
+      "experience": "9 years",
+      "qualifications": [
+        "MD",
+        "FAPA",
+        "Child Psychiatry Fellowship"
+      ],
+      "languages": [
+        "English",
+        "Spanish",
+        "Portuguese"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Columbia University",
+          "year": "2014"
+        },
+        {
+          "degree": "Psychiatry Residency",
+          "institution": "Mass General Hospital",
+          "year": "2018"
+        }
+      ],
+      "schedule": {
+        "monday": "9:00 AM - 5:00 PM",
+        "tuesday": "9:00 AM - 5:00 PM",
+        "wednesday": "9:00 AM - 5:00 PM",
+        "thursday": "9:00 AM - 5:00 PM",
+        "friday": "9:00 AM - 3:00 PM"
+      },
+      "specializations": [
+        "Anxiety Disorders",
+        "ADHD Management",
+        "Family Therapy"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Dr. David Palmer",
+      "specialty": "ENT",
+      "subspecialty": "Head and Neck Surgery",
+      "image": "https://img.freepik.com/free-photo/doctor-standing-with-folder-stethoscope_1291-16.jpg",
+      "rating": 4.7,
+      "availability": true,
+      "experience": "14 years",
+      "qualifications": [
+        "MD",
+        "FACS",
+        "Board Certified in Otolaryngology"
+      ],
+      "languages": [
+        "English",
+        "French"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "University of Pennsylvania",
+          "year": "2009"
+        },
+        {
+          "degree": "ENT Residency",
+          "institution": "Cleveland Clinic",
+          "year": "2014"
+        }
+      ],
+      "schedule": {
+        "monday": "8:30 AM - 4:30 PM",
+        "tuesday": "8:30 AM - 4:30 PM",
+        "wednesday": "8:30 AM - 4:30 PM",
+        "thursday": "8:30 AM - 4:30 PM",
+        "friday": "8:30 AM - 2:30 PM"
+      },
+      "specializations": [
+        "Sinus Surgery",
+        "Voice Disorders",
+        "Sleep Apnea Treatment"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Dr. Rachel Green",
+      "specialty": "Pediatrics",
+      "subspecialty": "Neonatal Care",
+      "image": "https://img.freepik.com/free-photo/female-doctor-hospital_1303-5791.jpg",
+      "rating": 4.6,
+      "availability": false,
+      "experience": "8 years",
+      "qualifications": [
+        "MD",
+        "FAAP"
+      ],
+      "languages": [
+        "English",
+        "Spanish"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "UCLA Medical School",
+          "year": "2015"
+        }
+      ],
+      "schedule": {
+        "monday": "9:00 AM - 5:00 PM",
+        "tuesday": "9:00 AM - 5:00 PM",
+        "wednesday": "9:00 AM - 5:00 PM",
+        "thursday": "9:00 AM - 5:00 PM",
+        "friday": "9:00 AM - 3:00 PM"
+      },
+      "specializations": [
+        "Newborn Care",
+        "Developmental Pediatrics",
+        "Pediatric Nutrition"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Dr. Thomas Anderson",
+      "specialty": "Orthopedics",
+      "subspecialty": "Spine Surgery",
+      "image": "https://img.freepik.com/free-photo/doctor-with-stethoscope_1154-69.jpg",
+      "rating": 4.7,
+      "availability": false,
+      "experience": "15 years",
+      "qualifications": [
+        "MD",
+        "FAAOS"
+      ],
+      "languages": [
+        "English"
+      ],
+      "education": [
+        {
+          "degree": "Doctor of Medicine",
+          "institution": "Johns Hopkins University",
+          "year": "2010"
+        }
+      ],
+      "schedule": {
+        "monday": "8:30 AM - 4:30 PM",
+        "tuesday": "8:30 AM - 4:30 PM",
+        "wednesday": "8:30 AM - 4:30 PM",
+        "thursday": "8:30 AM - 4:30 PM",
+        "friday": "8:30 AM - 2:30 PM"
+      },
+      "specializations": [
+        "Spinal Disorders",
+        "Minimally Invasive Surgery",
+        "Disc Replacement"
+      ]
+    }
+  ]
+}

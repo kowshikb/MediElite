@@ -1,0 +1,298 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "age": 45,
+    "gender": "Male",
+    "bloodGroup": "A+",
+    "contact": {
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890",
+      "address": "123 Main St, Springfield, IL"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Hypertension",
+        "diagnosed": "2018-05-20",
+        "treatment": "Lisinopril 10mg daily",
+        "status": "Ongoing"
+      },
+      {
+        "condition": "Seasonal Allergies",
+        "diagnosed": "2020-08-15",
+        "treatment": "Cetirizine 10mg as needed",
+        "status": "Managed"
+      }
+    ],
+    "insurance": {
+      "provider": "Health Insurance Co.",
+      "policyNumber": "HIC123456",
+      "groupNumber": "GRP789",
+      "expiryDate": "2026-12-31"
+    },
+    "emergencyContact": {
+      "name": "Jane Doe",
+      "relationship": "Spouse",
+      "phone": "123-456-7899"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "age": 32,
+    "gender": "Female",
+    "bloodGroup": "O-",
+    "contact": {
+      "email": "jane.smith@example.com",
+      "phone": "987-654-3210",
+      "address": "456 Oak Lane, Chicago, IL"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Asthma",
+        "diagnosed": "2019-03-10",
+        "treatment": "Albuterol inhaler",
+        "status": "Controlled"
+      },
+      {
+        "condition": "Migraine",
+        "diagnosed": "2021-06-15",
+        "treatment": "Sumatriptan as needed",
+        "status": "Ongoing"
+      }
+    ],
+    "insurance": {
+      "provider": "Wellness Insurance",
+      "policyNumber": "WI987654",
+      "groupNumber": "GRP456",
+      "expiryDate": "2025-09-30"
+    },
+    "emergencyContact": {
+      "name": "Robert Smith",
+      "relationship": "Brother",
+      "phone": "987-654-3211"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Emily Johnson",
+    "age": 28,
+    "gender": "Female",
+    "bloodGroup": "B+",
+    "contact": {
+      "email": "emily.johnson@example.com",
+      "phone": "555-123-4567",
+      "address": "789 Pine Road, Denver, CO"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Type 1 Diabetes",
+        "diagnosed": "2015-11-30",
+        "treatment": "Insulin therapy",
+        "status": "Managed"
+      },
+      {
+        "condition": "Celiac Disease",
+        "diagnosed": "2020-03-15",
+        "treatment": "Gluten-free diet",
+        "status": "Ongoing"
+      }
+    ],
+    "insurance": {
+      "provider": "Family Health Plan",
+      "policyNumber": "FHP654321",
+      "groupNumber": "GRP123",
+      "expiryDate": "2026-03-31"
+    },
+    "emergencyContact": {
+      "name": "Michael Johnson",
+      "relationship": "Father",
+      "phone": "555-123-4568"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Michael Brown",
+    "age": 8,
+    "gender": "Male",
+    "bloodGroup": "AB+",
+    "contact": {
+      "email": "sarah.brown@example.com",
+      "phone": "444-555-6666",
+      "address": "321 Maple Ave, Boston, MA"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Peanut Allergy",
+        "diagnosed": "2021-01-15",
+        "treatment": "Avoidance, EpiPen",
+        "status": "Ongoing"
+      }
+    ],
+    "insurance": {
+      "provider": "Child Care Health",
+      "policyNumber": "CCH789012",
+      "groupNumber": "GRP345",
+      "expiryDate": "2025-12-31"
+    },
+    "emergencyContact": {
+      "name": "Sarah Brown",
+      "relationship": "Mother",
+      "phone": "444-555-6667"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Robert Wilson",
+    "age": 65,
+    "gender": "Male",
+    "bloodGroup": "A-",
+    "contact": {
+      "email": "robert.wilson@example.com",
+      "phone": "777-888-9999",
+      "address": "567 Elm Street, Seattle, WA"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Coronary Artery Disease",
+        "diagnosed": "2019-07-20",
+        "treatment": "Statins, Beta blockers",
+        "status": "Stable"
+      },
+      {
+        "condition": "Osteoarthritis",
+        "diagnosed": "2020-11-30",
+        "treatment": "Physical therapy, NSAIDs",
+        "status": "Ongoing"
+      },
+      {
+        "condition": "Glaucoma",
+        "diagnosed": "2022-03-15",
+        "treatment": "Eye drops",
+        "status": "Managed"
+      }
+    ],
+    "insurance": {
+      "provider": "Senior Care Plus",
+      "policyNumber": "SCP345678",
+      "groupNumber": "GRP567",
+      "expiryDate": "2025-06-30"
+    },
+    "emergencyContact": {
+      "name": "Mary Wilson",
+      "relationship": "Daughter",
+      "phone": "777-888-9990"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Sarah Miller",
+    "age": 35,
+    "gender": "Female",
+    "bloodGroup": "O+",
+    "contact": {
+      "email": "sarah.miller@example.com",
+      "phone": "222-333-4444",
+      "address": "890 Cedar Lane, Austin, TX"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Anxiety Disorder",
+        "diagnosed": "2021-09-10",
+        "treatment": "CBT, SSRIs",
+        "status": "Improving"
+      },
+      {
+        "condition": "PCOS",
+        "diagnosed": "2019-04-25",
+        "treatment": "Hormonal therapy",
+        "status": "Managed"
+      }
+    ],
+    "insurance": {
+      "provider": "Texas Health Care",
+      "policyNumber": "THC901234",
+      "groupNumber": "GRP789",
+      "expiryDate": "2026-08-31"
+    },
+    "emergencyContact": {
+      "name": "James Miller",
+      "relationship": "Husband",
+      "phone": "222-333-4445"
+    }
+  },
+  {
+    "id": 7,
+    "name": "David Chen",
+    "age": 52,
+    "gender": "Male",
+    "bloodGroup": "B-",
+    "contact": {
+      "email": "david.chen@example.com",
+      "phone": "666-777-8888",
+      "address": "432 Birch Road, San Francisco, CA"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Type 2 Diabetes",
+        "diagnosed": "2017-08-12",
+        "treatment": "Metformin, Diet control",
+        "status": "Managed"
+      },
+      {
+        "condition": "Sleep Apnea",
+        "diagnosed": "2020-12-05",
+        "treatment": "CPAP therapy",
+        "status": "Ongoing"
+      }
+    ],
+    "insurance": {
+      "provider": "California Care",
+      "policyNumber": "CC567890",
+      "groupNumber": "GRP901",
+      "expiryDate": "2025-10-31"
+    },
+    "emergencyContact": {
+      "name": "Linda Chen",
+      "relationship": "Wife",
+      "phone": "666-777-8889"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Emma Thompson",
+    "age": 12,
+    "gender": "Female",
+    "bloodGroup": "A+",
+    "contact": {
+      "email": "karen.thompson@example.com",
+      "phone": "111-222-3333",
+      "address": "765 Oak Street, Portland, OR"
+    },
+    "medicalHistory": [
+      {
+        "condition": "Asthma",
+        "diagnosed": "2020-02-15",
+        "treatment": "Inhaled corticosteroids",
+        "status": "Controlled"
+      },
+      {
+        "condition": "Myopia",
+        "diagnosed": "2022-09-01",
+        "treatment": "Corrective lenses",
+        "status": "Ongoing"
+      }
+    ],
+    "insurance": {
+      "provider": "Kids First Health",
+      "policyNumber": "KFH123789",
+      "groupNumber": "GRP234",
+      "expiryDate": "2026-01-31"
+    },
+    "emergencyContact": {
+      "name": "Karen Thompson",
+      "relationship": "Mother",
+      "phone": "111-222-3334"
+    }
+  }
+]
