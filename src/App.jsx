@@ -13,7 +13,7 @@ const App = () => {
 
   const addNotification = (message, type = "info") => {
     setNotification({ id: Date.now(), message, type });
-    setTimeout(() => setNotification(null), 5000); // Increased duration to 5 seconds
+    setTimeout(() => setNotification(null), 4000); // Increased duration to 5 seconds
   };
 
   const navigation = {
