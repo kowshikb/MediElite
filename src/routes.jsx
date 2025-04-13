@@ -5,7 +5,6 @@ import Dashboard from "./pages/Dashboard";
 import ClientProfile from "./pages/ClientProfile";
 import DoctorDirectory from "./pages/DoctorDirectory";
 import AppointmentPage from "./pages/AppointmentPage";
-import HealthTracker from "./pages/HealthTracker";
 import DoctorDashboard from "./pages/DoctorDashboard";
 
 const AppRoutes = ({ userRole }) => {
@@ -27,7 +26,6 @@ const AppRoutes = ({ userRole }) => {
       {/* Client Routes */}
       <Route path="/client/dashboard" element={<Dashboard />} />
       <Route path="/client/profile" element={<ClientProfile />} />
-      <Route path="/client/health-tracker" element={<HealthTracker />} />
       <Route path="/client/find-doctor" element={<DoctorDirectory />} />
 
       {/* Doctor Routes */}

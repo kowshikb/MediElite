@@ -1,12 +1,15 @@
 import React, { useState, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NotificationContext } from "../components/AppointmentCalendar";
+import { useAppointments } from "../context/AppointmentContext";
 import ChatBox from "./ChatBox";
+import { format } from "date-fns";
 
 const DoctorCard = ({ doctor }) => {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const { addNotification } = useContext(NotificationContext);
+  const { addAppointment, currentAppointments } = useAppointments();
 
   const {
     name,
@@ -22,6 +25,10 @@ const DoctorCard = ({ doctor }) => {
     specializations,
   } = doctor;
 
+  const hasExistingAppointment = currentAppointments.some(
+    (apt) => apt.doctorName === doctor.name
+  );
+
   const handleBookAppointment = () => {
     if (!availability) {
       addNotification(
@@ -29,6 +36,12 @@ const DoctorCard = ({ doctor }) => {
         "warning"
       );
       return;
+    }
+    if (hasExistingAppointment) {
+      addNotification(
+        "You already have an upcoming appointment with this doctor",
+        "info"
+      );
     }
     setShowBookingModal(true);
   };
@@ -48,23 +61,24 @@ const DoctorCard = ({ doctor }) => {
     <>
       <motion.div
         whileHover={{ y: -5 }}
-        className="bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col"
+        className="card h-full flex flex-col group"
       >
         <div className="relative">
           <img
             src={image}
             alt={name}
-            className="w-full h-64 object-cover"
+            className="w-full h-64 object-cover rounded-t-2xl"
             onError={(e) => {
               e.target.src = `https://ui-avatars.com/api/?name=${name}&size=400&background=0D8ABC&color=fff`;
             }}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
           {availability ? (
-            <span className="absolute top-4 right-4 px-3 py-1 bg-green-500 text-white text-sm rounded-full shadow-lg">
-              Available
+            <span className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-green-500 text-white shadow-lg backdrop-blur-sm">
+              Available Now
             </span>
           ) : (
-            <span className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-sm rounded-full shadow-lg">
+            <span className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-red-500 text-white shadow-lg backdrop-blur-sm">
               Unavailable
             </span>
           )}
@@ -73,113 +87,97 @@ const DoctorCard = ({ doctor }) => {
         <div className="p-6 flex-grow">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-xl font-bold text-gray-900">{name}</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">{name}</h3>
               <p className="text-blue-600 font-medium">{specialty}</p>
-              <p className="text-gray-500 text-sm">{subspecialty}</p>
+              <p className="text-sm text-gray-600">{subspecialty}</p>
             </div>
-            <div className="flex items-center bg-blue-50 px-3 py-1 rounded-lg">
-              <span className="text-yellow-500 mr-1">⭐</span>
+            <div className="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+              <span className="text-yellow-500 mr-1.5">⭐</span>
               <span className="text-blue-700 font-medium">{rating}</span>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center text-gray-600">
-              <span className="mr-2">👨‍⚕️</span>
-              <span>{experience} experience</span>
+              <span className="text-xl mr-3">👨‍⚕️</span>
+              <span className="font-medium">{experience} experience</span>
             </div>
 
-            <div className="flex items-center text-gray-600">
-              <span className="mr-2">🎓</span>
-              <div className="flex flex-wrap gap-1">
-                {qualifications.map((qual, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-sm"
-                  >
-                    {qual}
-                  </span>
-                ))}
+            <div className="space-y-2">
+              <div className="flex items-start">
+                <span className="text-xl mr-3">🎓</span>
+                <div className="flex flex-wrap gap-2">
+                  {qualifications.map((qual, index) => (
+                    <span
+                      key={index}
+                      className="px-2.5 py-1 text-sm bg-blue-50 text-blue-700 rounded-lg font-medium"
+                    >
+                      {qual}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center text-gray-600">
-              <span className="mr-2">🗣️</span>
-              <div className="flex flex-wrap gap-1">
-                {languages.map((lang, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
-                  >
-                    {lang}
-                  </span>
-                ))}
+              <div className="flex items-start">
+                <span className="text-xl mr-3">🗣️</span>
+                <div className="flex flex-wrap gap-2">
+                  {languages.map((lang, index) => (
+                    <span
+                      key={index}
+                      className="px-2.5 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg font-medium"
+                    >
+                      {lang}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="text-gray-600">
-              <span className="mr-2">🔬</span>
-              <span className="font-medium">Specializations:</span>
-              <div className="mt-1 flex flex-wrap gap-1">
-                {specializations.map((spec, index) => (
-                  <span
-                    key={index}
-                    className="bg-green-50 text-green-700 px-2 py-1 rounded text-sm"
-                  >
-                    {spec}
-                  </span>
-                ))}
+              <div className="flex items-start">
+                <span className="text-xl mr-3">🔬</span>
+                <div className="flex flex-wrap gap-2">
+                  {specializations.map((spec, index) => (
+                    <span
+                      key={index}
+                      className="px-2.5 py-1 text-sm bg-green-50 text-green-700 rounded-lg font-medium"
+                    >
+                      {spec}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="p-6 border-t border-gray-100">
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <motion.button
               whileHover={availability ? { scale: 1.02 } : {}}
               whileTap={availability ? { scale: 0.98 } : {}}
               onClick={handleBookAppointment}
-              className={`flex-1 py-2 px-4 rounded-lg flex items-center justify-center transition-colors ${
-                availability
-                  ? "bg-blue-500 text-white hover:bg-blue-600"
-                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              className={`flex-1 ${
+                hasExistingAppointment ? "btn-secondary" : "btn-primary"
+              } flex items-center justify-center ${
+                !availability && "opacity-50 cursor-not-allowed"
               }`}
               disabled={!availability}
-              title={
-                availability
-                  ? "Book an appointment"
-                  : "Doctor is currently unavailable"
-              }
             >
-              <span className={`mr-2 ${!availability ? "opacity-50" : ""}`}>
-                📅
+              <span className="mr-2">
+                {hasExistingAppointment ? "🔄" : "📅"}
               </span>
-              Book Appointment
+              {hasExistingAppointment ? "Book Another" : "Book Appointment"}
             </motion.button>
+
             <motion.button
               whileHover={availability ? { scale: 1.02 } : {}}
               whileTap={availability ? { scale: 0.98 } : {}}
               onClick={handleMessageDoctor}
-              className={`px-4 py-2 border rounded-lg transition-colors ${
-                availability
-                  ? "border-gray-300 hover:bg-gray-50"
-                  : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+              className={`btn-secondary flex items-center justify-center ${
+                !availability && "opacity-50 cursor-not-allowed"
               }`}
               disabled={!availability}
-              title={
-                availability
-                  ? "Chat with doctor"
-                  : "Doctor is currently unavailable"
-              }
             >
-              <span
-                role="img"
-                aria-label="chat"
-                className={availability ? "" : "opacity-50"}
-              >
-                💬
-              </span>
+              <span>💬</span>
             </motion.button>
           </div>
         </div>
@@ -192,29 +190,33 @@ const DoctorCard = ({ doctor }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           >
             <motion.div
-              initial={{ scale: 0.9 }}
+              initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="bg-white rounded-xl p-6 max-w-lg w-full"
+              exit={{ scale: 0.95 }}
+              className="card max-w-lg w-full overflow-hidden"
             >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">
-                  Book Appointment with {name}
-                </h3>
-                <button
-                  onClick={() => setShowBookingModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ×
-                </button>
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Book Appointment with {name}
+                  </h3>
+                  <button
+                    onClick={() => setShowBookingModal(false)}
+                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
-              <AppointmentBookingForm
-                doctor={doctor}
-                onClose={() => setShowBookingModal(false)}
-              />
+              <div className="p-6">
+                <AppointmentBookingForm
+                  doctor={doctor}
+                  onClose={() => setShowBookingModal(false)}
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -227,24 +229,28 @@ const DoctorCard = ({ doctor }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           >
             <motion.div
-              initial={{ scale: 0.9 }}
+              initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
+              exit={{ scale: 0.95 }}
+              className="card w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden"
             >
-              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Chat with {name}</h3>
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Chat with {name}
+                </h3>
                 <button
                   onClick={() => setShowChatModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-400 hover:text-gray-500 transition-colors"
                 >
                   ×
                 </button>
               </div>
-              <ChatBox doctorId={doctor.id} doctorName={name} />
+              <div className="flex-grow overflow-hidden">
+                <ChatBox doctorId={doctor.id} doctorName={name} />
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -257,6 +263,9 @@ const AppointmentBookingForm = ({ doctor, onClose }) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [type, setType] = useState("Regular Checkup");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addAppointment } = useAppointments();
+  const { addNotification } = useContext(NotificationContext);
 
   const timeSlots = [
     "09:00",
@@ -288,20 +297,57 @@ const AppointmentBookingForm = ({ doctor, onClose }) => {
     setDate(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!doctor.availability) {
-      alert("This doctor is currently unavailable for appointments");
+      addNotification(
+        "This doctor is currently unavailable for appointments",
+        "warning"
+      );
       return;
     }
-    alert(`Appointment booked with ${doctor.name} for ${date} at ${time}`);
-    onClose();
+
+    setIsSubmitting(true);
+    try {
+      const newAppointment = {
+        doctorName: doctor.name,
+        date,
+        time,
+        type,
+        notes: "",
+      };
+
+      addAppointment(newAppointment);
+      addNotification(
+        `✅ Appointment successfully booked with ${doctor.name} for ${format(
+          new Date(date),
+          "MMMM d"
+        )} at ${
+          time.includes(":30")
+            ? time.replace(":30", ":30 ") + (parseInt(time) < 12 ? "AM" : "PM")
+            : time + " " + (parseInt(time) < 12 ? "AM" : "PM")
+        }. See all appointments in your dashboard.`,
+        "success"
+      );
+      onClose();
+    } catch (error) {
+      if (error.message.includes("duplicate")) {
+        addNotification("❌ " + error.message, "error");
+      } else {
+        addNotification(
+          "❌ Appointment failed. Duplicate appointment detected.",
+          "error"
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Date
           <span className="text-red-500 ml-1">*</span>
         </label>
@@ -311,19 +357,20 @@ const AppointmentBookingForm = ({ doctor, onClose }) => {
           onChange={handleDateChange}
           min={today.toISOString().split("T")[0]}
           max={maxDate.toISOString().split("T")[0]}
-          className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+          className="input-field"
           required
         />
       </div>
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Time
           <span className="text-red-500 ml-1">*</span>
         </label>
         <select
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+          className="input-field"
           required
         >
           <option value="">Choose a time slot</option>
@@ -332,20 +379,21 @@ const AppointmentBookingForm = ({ doctor, onClose }) => {
               {slot.includes(":30")
                 ? slot.replace(":30", ":30 ") +
                   (parseInt(slot) < 12 ? "AM" : "PM")
-                : slot + ":00 " + (parseInt(slot) < 12 ? "AM" : "PM")}
+                : slot + " " + (parseInt(slot) < 12 ? "AM" : "PM")}
             </option>
           ))}
         </select>
       </div>
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Appointment Type
           <span className="text-red-500 ml-1">*</span>
         </label>
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors"
+          className="input-field"
           required
         >
           <option>Regular Checkup</option>
@@ -354,19 +402,31 @@ const AppointmentBookingForm = ({ doctor, onClose }) => {
           <option>Emergency</option>
         </select>
       </div>
+
       <div className="flex justify-end space-x-3 pt-4">
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-200"
+          className="btn-secondary"
+          disabled={isSubmitting}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200"
+          className="btn-primary relative"
+          disabled={isSubmitting}
         >
-          Book Appointment
+          {isSubmitting ? (
+            <>
+              <span className="opacity-0">Book Appointment</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            </>
+          ) : (
+            "Book Appointment"
+          )}
         </button>
       </div>
     </form>

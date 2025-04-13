@@ -1,279 +1,278 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
+  Area,
 } from "recharts";
-import vitalsData from "../data/vitals.json";
+import { motion } from "framer-motion";
 
 const VitalsChart = () => {
-  const [selectedMetric, setSelectedMetric] = useState("heartRate");
-  const [selectedPeriod, setSelectedPeriod] = useState("week");
-  const { dailyReadings, monthlyReadings, yearlyReadings, normalRanges } =
-    vitalsData.vitals;
+  const [selectedMetric, setSelectedMetric] = useState("temperature");
 
-  const metrics = {
-    heartRate: {
-      label: "Heart Rate",
-      color: "#ef4444",
-      backgroundColor: "#fef2f2",
-      textColor: "#991b1b",
-      unit: "bpm",
+  const metrics = [
+    {
+      id: "heartRate",
+      name: "Heart Rate",
       icon: "❤️",
+      color: "red",
+      bg: "bg-red-50",
     },
-    bloodPressure: {
-      label: "Blood Pressure",
-      color: "#3b82f6",
-      backgroundColor: "#eff6ff",
-      textColor: "#1e40af",
-      unit: "mmHg",
+    {
+      id: "bloodPressure",
+      name: "Blood Pressure",
       icon: "🩺",
+      color: "blue",
+      bg: "bg-blue-50",
     },
-    temperature: {
-      label: "Temperature",
-      color: "#f59e0b",
-      backgroundColor: "#fffbeb",
-      textColor: "#92400e",
-      unit: "°F",
+    {
+      id: "temperature",
+      name: "Temperature",
       icon: "🌡️",
+      color: "green",
+      bg: "bg-green-50",
     },
-    oxygenLevel: {
-      label: "Oxygen Level",
-      color: "#10b981",
-      backgroundColor: "#ecfdf5",
-      textColor: "#065f46",
-      unit: "%",
-      icon: "💨",
+    {
+      id: "oxygenLevel",
+      name: "Oxygen Level",
+      icon: "🫁",
+      color: "indigo",
+      bg: "bg-indigo-50",
     },
-    glucose: {
-      label: "Glucose",
-      color: "#8b5cf6",
-      backgroundColor: "#f5f3ff",
-      textColor: "#5b21b6",
-      unit: "mg/dL",
+    {
+      id: "glucose",
+      name: "Glucose",
       icon: "📊",
+      color: "purple",
+      bg: "bg-purple-50",
     },
+  ];
+
+  const data = {
+    heartRate: [
+      { date: "Apr 13", value: 72 },
+      { date: "Apr 12", value: 75 },
+      { date: "Apr 11", value: 71 },
+      { date: "Apr 10", value: 73 },
+      { date: "Apr 9", value: 74 },
+      { date: "Apr 8", value: 72 },
+      { date: "Apr 7", value: 73 },
+    ],
+    bloodPressure: [
+      { date: "Apr 13", value: 120 },
+      { date: "Apr 12", value: 122 },
+      { date: "Apr 11", value: 118 },
+      { date: "Apr 10", value: 121 },
+      { date: "Apr 9", value: 119 },
+      { date: "Apr 8", value: 120 },
+      { date: "Apr 7", value: 121 },
+    ],
+    temperature: [
+      { date: "Apr 13", value: 98.6 },
+      { date: "Apr 12", value: 98.6 },
+      { date: "Apr 11", value: 98.6 },
+      { date: "Apr 10", value: 98.6 },
+      { date: "Apr 9", value: 98.6 },
+      { date: "Apr 8", value: 98.6 },
+      { date: "Apr 7", value: 98.6 },
+    ],
+    oxygenLevel: [
+      { date: "Apr 13", value: 98 },
+      { date: "Apr 12", value: 97 },
+      { date: "Apr 11", value: 99 },
+      { date: "Apr 10", value: 98 },
+      { date: "Apr 9", value: 98 },
+      { date: "Apr 8", value: 97 },
+      { date: "Apr 7", value: 98 },
+    ],
+    glucose: [
+      { date: "Apr 13", value: 95 },
+      { date: "Apr 12", value: 92 },
+      { date: "Apr 11", value: 94 },
+      { date: "Apr 10", value: 93 },
+      { date: "Apr 9", value: 96 },
+      { date: "Apr 8", value: 95 },
+      { date: "Apr 7", value: 94 },
+    ],
   };
 
-  const getReadingsForPeriod = () => {
-    switch (selectedPeriod) {
-      case "week":
-        return dailyReadings;
-      case "month":
-        return monthlyReadings;
-      case "year":
-        return yearlyReadings;
-      default:
-        return dailyReadings;
-    }
+  const chartColors = {
+    heartRate: "#EF4444",
+    bloodPressure: "#3B82F6",
+    temperature: "#10B981",
+    oxygenLevel: "#6366F1",
+    glucose: "#8B5CF6",
   };
 
-  const formatDate = (dateStr) => {
-    switch (selectedPeriod) {
-      case "week":
-        return new Date(dateStr).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        });
-      case "month":
-        // For monthly data, format like "Jan 2025"
-        const [year, month] = dateStr.split("-");
-        const date = new Date(year, parseInt(month) - 1);
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          year: "numeric",
-        });
-      case "year":
-        // For yearly data, just show the year
-        return dateStr;
-      default:
-        return dateStr;
-    }
+  const gradientColors = {
+    heartRate: ["#FEE2E2", "#FFF1F2"],
+    bloodPressure: ["#DBEAFE", "#F0F9FF"],
+    temperature: ["#D1FAE5", "#ECFDF5"],
+    oxygenLevel: ["#E0E7FF", "#EEF2FF"],
+    glucose: ["#F3E8FF", "#FAF5FF"],
   };
 
-  const isInNormalRange = (value, metric) => {
-    if (metric === "bloodPressure") {
-      return true; // Handle blood pressure separately
-    }
-    const range = normalRanges[metric];
-    return value >= range.min && value <= range.max;
+  const cardStyles = {
+    heartRate: "hover:shadow-red-500/10",
+    bloodPressure: "hover:shadow-blue-500/10",
+    temperature: "hover:shadow-green-500/10",
+    oxygenLevel: "hover:shadow-indigo-500/10",
+    glucose: "hover:shadow-purple-500/10",
   };
 
-  const renderBloodPressureChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={getReadingsForPeriod()}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="date" tickFormatter={formatDate} />
-        <YAxis />
-        <Tooltip
-          labelFormatter={formatDate}
-          formatter={(value, name) => [
-            value,
-            name === "systolic" ? "Systolic" : "Diastolic",
-          ]}
-        />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="bloodPressure.systolic"
-          name="Systolic"
-          stroke="#3b82f6"
-          dot={{ r: 4 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="bloodPressure.diastolic"
-          name="Diastolic"
-          stroke="#60a5fa"
-          dot={{ r: 4 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
-
-  const renderMetricChart = () => (
-    <ResponsiveContainer width="100%" height={300}>
-      <AreaChart data={getReadingsForPeriod()}>
-        <defs>
-          <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor={metrics[selectedMetric].color}
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="95%"
-              stopColor={metrics[selectedMetric].color}
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-        </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="date" tickFormatter={formatDate} />
-        <YAxis />
-        <Tooltip
-          labelFormatter={formatDate}
-          formatter={(value) => [
-            `${value} ${metrics[selectedMetric].unit}`,
-            metrics[selectedMetric].label,
-          ]}
-        />
-        <Area
-          type="monotone"
-          dataKey={selectedMetric}
-          stroke={metrics[selectedMetric].color}
-          fill="url(#colorMetric)"
-          dot={{ r: 4 }}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
-  );
+  const latestReadings = {
+    heartRate: "72 bpm",
+    bloodPressure: "120/80 mmHg",
+    temperature: "98.6 °F",
+    oxygenLevel: "98 %",
+    glucose: "95 mg/dL",
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl shadow-lg p-6"
-    >
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Vitals Overview</h2>
-        <p className="text-gray-600">Track your health metrics over time</p>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Vitals Overview
+        </h2>
+        <p className="text-gray-500 text-sm">
+          Track your health metrics over time
+        </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-6">
-        {Object.entries(metrics).map(
-          ([key, { label, icon, backgroundColor, textColor }]) => (
-            <motion.button
-              key={key}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedMetric(key)}
-              style={{ backgroundColor }}
-              className={`p-4 rounded-lg text-left transition-colors ${
-                selectedMetric === key ? "ring-2 ring-offset-2" : ""
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
+        {metrics.map((metric) => (
+          <motion.button
+            key={metric.id}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => setSelectedMetric(metric.id)}
+            className={`${
+              metric.bg
+            } rounded-lg py-1.5 px-2.5 transition-all duration-200 text-left border
+              ${
+                selectedMetric === metric.id
+                  ? `border-${metric.color}-400 bg-${metric.color}-50/70 shadow-sm`
+                  : "border-transparent hover:border-gray-200 hover:bg-gray-50/80"
               }`}
-            >
-              <span className="text-2xl mb-2 block">{icon}</span>
-              <span
-                className="text-sm font-medium block"
-                style={{ color: textColor }}
-              >
-                {label}
+          >
+            <div className="flex items-center">
+              <span className="text-base mr-1.5">{metric.icon}</span>
+              <span className="font-medium text-gray-700 text-sm">
+                {metric.name}
               </span>
-            </motion.button>
-          )
-        )}
-      </div>
-
-      <div className="bg-gray-50 rounded-lg p-4 mb-6">
-        {selectedMetric === "bloodPressure"
-          ? renderBloodPressureChart()
-          : renderMetricChart()}
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {dailyReadings.slice(-1).map((reading) => (
-          <React.Fragment key={reading.date}>
-            {selectedMetric === "bloodPressure" ? (
-              <>
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-sm text-blue-700 mb-1">Systolic</p>
-                  <p className="text-2xl font-bold text-blue-900">
-                    {reading.bloodPressure.systolic}
-                    <span className="text-sm font-normal ml-1">mmHg</span>
-                  </p>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-sm text-blue-700 mb-1">Diastolic</p>
-                  <p className="text-2xl font-bold text-blue-900">
-                    {reading.bloodPressure.diastolic}
-                    <span className="text-sm font-normal ml-1">mmHg</span>
-                  </p>
-                </div>
-              </>
-            ) : (
-              <div
-                className={`${
-                  isInNormalRange(reading[selectedMetric], selectedMetric)
-                    ? "bg-green-50"
-                    : "bg-red-50"
-                } rounded-lg p-4 col-span-2`}
-              >
-                <p
-                  className={`text-sm ${
-                    isInNormalRange(reading[selectedMetric], selectedMetric)
-                      ? "text-green-700"
-                      : "text-red-700"
-                  } mb-1`}
-                >
-                  Latest Reading
-                </p>
-                <p
-                  className={`text-2xl font-bold ${
-                    isInNormalRange(reading[selectedMetric], selectedMetric)
-                      ? "text-green-900"
-                      : "text-red-900"
-                  }`}
-                >
-                  {reading[selectedMetric]}
-                  <span className="text-sm font-normal ml-1">
-                    {metrics[selectedMetric].unit}
-                  </span>
-                </p>
-              </div>
-            )}
-          </React.Fragment>
+            </div>
+          </motion.button>
         ))}
       </div>
-    </motion.div>
+
+      <motion.div
+        className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300"
+        style={{
+          background: `linear-gradient(to bottom, white, ${gradientColors[selectedMetric][0]}15, ${gradientColors[selectedMetric][1]}10)`,
+        }}
+      >
+        <div className="h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={data[selectedMetric]}
+              margin={{ top: 20, right: 30, bottom: 20, left: 20 }}
+            >
+              <defs>
+                <linearGradient
+                  id={`gradient-${selectedMetric}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor={chartColors[selectedMetric]}
+                    stopOpacity={0.2}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={chartColors[selectedMetric]}
+                    stopOpacity={0.05}
+                  />
+                </linearGradient>
+              </defs>
+              <XAxis
+                dataKey="date"
+                stroke="#94A3B8"
+                tickLine={false}
+                axisLine={false}
+                dy={10}
+                tick={{ fill: "#64748B", fontSize: 12 }}
+              />
+              <YAxis
+                stroke="#94A3B8"
+                tickLine={false}
+                axisLine={false}
+                domain={["auto", "auto"]}
+                dx={-10}
+                tick={{ fill: "#64748B", fontSize: 12 }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "none",
+                  borderRadius: "12px",
+                  boxShadow:
+                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                  padding: "12px",
+                }}
+                labelStyle={{
+                  color: "#1F2937",
+                  fontWeight: 600,
+                  marginBottom: "4px",
+                }}
+                itemStyle={{ color: chartColors[selectedMetric] }}
+                cursor={{ stroke: "#E2E8F0", strokeWidth: 1 }}
+              />
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="none"
+                fill={`url(#gradient-${selectedMetric})`}
+                fillOpacity={1}
+              />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={chartColors[selectedMetric]}
+                strokeWidth={3}
+                dot={false}
+                activeDot={{
+                  r: 6,
+                  fill: "white",
+                  stroke: chartColors[selectedMetric],
+                  strokeWidth: 2,
+                }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="bg-gray-50 rounded-xl p-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <p className="text-gray-600 text-sm mb-2">Latest Reading</p>
+        <div
+          className="text-4xl font-semibold"
+          style={{ color: chartColors[selectedMetric] }}
+        >
+          {latestReadings[selectedMetric]}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

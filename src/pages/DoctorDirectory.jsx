@@ -72,19 +72,24 @@ const DoctorDirectory = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="max-w-7xl mx-auto px-4 py-6"
+      className="max-w-7xl mx-auto px-4 py-8"
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 mb-8 text-white">
-        <h1 className="text-4xl font-bold mb-3">Find Your Doctor</h1>
-        <p className="text-blue-100 text-lg">
-          Browse through our network of qualified healthcare professionals
-        </p>
+      <div className="relative overflow-hidden glass-card bg-gradient-to-r from-blue-400 to-blue-500 rounded-3xl p-8 md:p-12">
+        <div className="relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            Find a Doctor
+          </h1>
+          <p className="text-blue-100 text-lg">
+            Browse our network of trusted healthcare professionals
+          </p>
+        </div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="card p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Search */}
           <div className="relative">
             <input
@@ -92,16 +97,18 @@ const DoctorDirectory = () => {
               placeholder="Search doctors, specialties..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-field pl-12"
             />
-            <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+            <span className="absolute left-4 top-3.5 text-gray-400 text-xl">
+              🔍
+            </span>
           </div>
 
           {/* Specialty Filter */}
           <select
             value={selectedSpecialty}
             onChange={(e) => setSelectedSpecialty(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="input-field"
           >
             {specialties.map((specialty) => (
               <option key={specialty} value={specialty}>
@@ -114,7 +121,7 @@ const DoctorDirectory = () => {
           <select
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="input-field"
           >
             {languages.map((language) => (
               <option key={language} value={language}>
@@ -127,7 +134,7 @@ const DoctorDirectory = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="input-field"
           >
             <option value="rating">Sort by Rating</option>
             <option value="experience">Sort by Experience</option>
@@ -136,31 +143,36 @@ const DoctorDirectory = () => {
         </div>
 
         {/* Availability Toggle */}
-        <div className="mt-4 flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="availableOnly"
-            checked={isAvailableOnly}
-            onChange={(e) => setIsAvailableOnly(e.target.checked)}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="availableOnly" className="text-gray-700">
-            Show available doctors only
-          </label>
-        </div>
+        <div className="mt-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="availableOnly"
+              checked={isAvailableOnly}
+              onChange={(e) => setIsAvailableOnly(e.target.checked)}
+              className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+            />
+            <label
+              htmlFor="availableOnly"
+              className="text-gray-700 font-medium"
+            >
+              Show available doctors only
+            </label>
+          </div>
 
-        <div className="flex justify-end mt-4">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={resetFilters}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            className="btn-secondary"
           >
             Reset Filters
-          </button>
+          </motion.button>
         </div>
       </div>
 
       {/* Results Stats */}
-      <div className="mb-6 text-gray-600">
+      <div className="mb-6 text-gray-600 font-medium px-2">
         Found {filteredDoctors.length} doctor
         {filteredDoctors.length !== 1 ? "s" : ""}
         {selectedSpecialty !== "all" && ` in ${selectedSpecialty}`}
@@ -168,7 +180,7 @@ const DoctorDirectory = () => {
         {isAvailableOnly && " available now"}
       </div>
 
-      {/* Results */}
+      {/* Results Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence>
           {filteredDoctors.map((doctor, index) => (
@@ -191,12 +203,12 @@ const DoctorDirectory = () => {
           animate={{ opacity: 1 }}
           className="text-center py-12"
         >
-          <span className="text-6xl mb-4 block">🔍</span>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+          <span className="text-6xl mb-6 block">🔍</span>
+          <h3 className="text-2xl font-semibold text-gray-700 mb-2">
             No doctors found
           </h3>
-          <p className="text-gray-500">
-            Try adjusting your search criteria or filters
+          <p className="text-gray-500 text-lg">
+            Try adjusting your filters or search terms
           </p>
         </motion.div>
       )}

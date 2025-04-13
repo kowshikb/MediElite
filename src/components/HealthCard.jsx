@@ -1,142 +1,155 @@
 import React from "react";
 import { motion } from "framer-motion";
-import vitalsData from "../data/vitals.json";
-
 const HealthCard = ({ type }) => {
-  const { dailyReadings, normalRanges } = vitalsData.vitals;
-  const latestReading = dailyReadings[dailyReadings.length - 1];
-
-  const cardTypes = {
-    heartRate: {
-      title: "Heart Rate",
-      icon: "❤️",
-      value: latestReading.heartRate,
-      unit: "bpm",
-      bgColor: "bg-red-50",
-      textColor: "text-red-700",
-      borderColor: "border-red-200",
-      range: normalRanges.heartRate,
-      trend: calculateTrend("heartRate"),
-    },
-    bloodPressure: {
-      title: "Blood Pressure",
-      icon: "🩺",
-      value: `${latestReading.bloodPressure.systolic}/${latestReading.bloodPressure.diastolic}`,
-      unit: "mmHg",
-      bgColor: "bg-blue-50",
-      textColor: "text-blue-700",
-      borderColor: "border-blue-200",
-      range: normalRanges.bloodPressure,
-      trend: calculateTrend("bloodPressure", "systolic"),
-    },
-    oxygenLevel: {
-      title: "Oxygen Level",
-      icon: "💨",
-      value: latestReading.oxygenLevel,
-      unit: "%",
-      bgColor: "bg-green-50",
-      textColor: "text-green-700",
-      borderColor: "border-green-200",
-      range: normalRanges.oxygenLevel,
-      trend: calculateTrend("oxygenLevel"),
-    },
-    glucose: {
-      title: "Blood Glucose",
-      icon: "📊",
-      value: latestReading.glucose,
-      unit: "mg/dL",
-      bgColor: "bg-purple-50",
-      textColor: "text-purple-700",
-      borderColor: "border-purple-200",
-      range: normalRanges.glucose,
-      trend: calculateTrend("glucose"),
-    },
+  const getCardData = () => {
+    switch (type) {
+      case "heartRate":
+        return {
+          title: "Heart Rate",
+          value: "72",
+          unit: "bpm",
+          icon: "❤️",
+          color: "red",
+          change: "+2",
+          status: "normal",
+        };
+      case "bloodPressure":
+        return {
+          title: "Blood Pressure",
+          value: "120/80",
+          unit: "mmHg",
+          icon: "🩺",
+          color: "blue",
+          change: "-5",
+          status: "normal",
+        };
+      case "oxygenLevel":
+        return {
+          title: "Oxygen Level",
+          value: "98",
+          unit: "%",
+          icon: "🫁",
+          color: "green",
+          change: "+1",
+          status: "excellent",
+        };
+      case "glucose":
+        return {
+          title: "Blood Glucose",
+          value: "95",
+          unit: "mg/dL",
+          icon: "🩸",
+          color: "purple",
+          change: "-3",
+          status: "normal",
+        };
+      default:
+        return {
+          title: "Unknown",
+          value: "0",
+          unit: "",
+          icon: "📊",
+          color: "gray",
+          change: "0",
+          status: "unknown",
+        };
+    }
   };
 
-  function calculateTrend(metric, subMetric = null) {
-    const last3Days = dailyReadings.slice(-3);
-    const values = subMetric
-      ? last3Days.map((reading) => reading[metric][subMetric])
-      : last3Days.map((reading) => reading[metric]);
+  const data = getCardData();
+  const colorVariants = {
+    red: "from-red-500 to-red-600",
+    blue: "from-blue-500 to-blue-600",
+    green: "from-green-500 to-green-600",
+    purple: "from-purple-500 to-purple-600",
+    gray: "from-gray-500 to-gray-600",
+  };
 
-    const diff = values[2] - values[1];
-    if (Math.abs(diff) < 0.5) return "stable";
-    return diff > 0 ? "up" : "down";
-  }
-
-  function getStatusColor(type, value) {
-    if (type === "bloodPressure") {
-      const [systolic, diastolic] = value.split("/").map(Number);
-      const isNormal =
-        systolic >= normalRanges.bloodPressure.systolic.min &&
-        systolic <= normalRanges.bloodPressure.systolic.max &&
-        diastolic >= normalRanges.bloodPressure.diastolic.min &&
-        diastolic <= normalRanges.bloodPressure.diastolic.max;
-      return isNormal ? "green" : "red";
-    }
-
-    const numValue = Number(value);
-    const range = normalRanges[type];
-    return numValue >= range.min && numValue <= range.max ? "green" : "red";
-  }
-
-  const card = cardTypes[type];
-  const statusColor = getStatusColor(type, card.value);
-
-  const trendIcons = {
-    up: "↗️",
-    down: "↘️",
-    stable: "→",
+  const statusColors = {
+    excellent: "text-green-500",
+    normal: "text-blue-500",
+    warning: "text-yellow-500",
+    critical: "text-red-500",
+    unknown: "text-gray-500",
   };
 
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      className={`rounded-xl shadow-sm p-6 border ${card.bgColor} ${card.borderColor}`}
+      whileHover={{ y: -5, scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+      className="card relative overflow-hidden"
     >
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center">
-          <span className="text-2xl mr-2">{card.icon}</span>
+      {/* Background Gradient */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${
+          colorVariants[data.color]
+        } opacity-10`}
+      />
+
+      {/* Content */}
+      <div className="relative p-6">
+        <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className={`font-medium ${card.textColor}`}>{card.title}</h3>
-            <p
-              className={`${
-                statusColor === "green" ? "text-green-600" : "text-red-600"
-              } text-sm font-medium`}
+            <span className="text-3xl mb-2 block">{data.icon}</span>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {data.title}
+            </h3>
+          </div>
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: [0.8, 1.2, 1] }}
+            transition={{ duration: 0.5 }}
+            className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+              statusColors[data.status]
+            } bg-${data.color}-50`}
+          >
+            {data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+          </motion.div>
+        </div>
+
+        <div className="mt-4">
+          <div className="flex items-baseline">
+            <span className="text-3xl font-bold text-gray-900">
+              {data.value}
+            </span>
+            <span className="ml-2 text-gray-600">{data.unit}</span>
+          </div>
+
+          <div className="mt-2 flex items-center">
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`inline-flex items-center text-sm ${
+                parseFloat(data.change) > 0 ? "text-green-600" : "text-red-600"
+              }`}
             >
-              {statusColor === "green" ? "Normal" : "Attention needed"}
-            </p>
+              {parseFloat(data.change) > 0 ? "↑" : "↓"}
+              {Math.abs(parseFloat(data.change))}
+            </motion.span>
+            <span className="text-gray-500 text-sm ml-2">
+              from last reading
+            </span>
           </div>
         </div>
-        <span className="text-xl" title={`Trend: ${card.trend}`}>
-          {trendIcons[card.trend]}
-        </span>
-      </div>
 
-      <div className="mt-4">
-        <div className="flex items-baseline">
-          <span className={`text-3xl font-bold ${card.textColor}`}>
-            {card.value}
-          </span>
-          <span className={`ml-1 ${card.textColor} text-sm opacity-75`}>
-            {card.unit}
-          </span>
-        </div>
-
-        <div className="mt-4 text-sm text-gray-600">
-          Normal range:
-          {type === "bloodPressure" ? (
-            <span className={`font-medium ${card.textColor}`}>
-              {" "}
-              {card.range.systolic.min}-{card.range.systolic.max}/
-              {card.range.diastolic.min}-{card.range.diastolic.max} {card.unit}
-            </span>
-          ) : (
-            <span className={`font-medium ${card.textColor}`}>
-              {" "}
-              {card.range.min}-{card.range.max} {card.unit}
-            </span>
-          )}
+        {/* Chart Preview (placeholder) */}
+        <div className="mt-4 h-12 w-full overflow-hidden">
+          <svg
+            className="w-full h-full"
+            viewBox="0 0 100 20"
+            preserveAspectRatio="none"
+          >
+            <motion.path
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              d="M0,10 Q25,5 50,10 T100,10"
+              fill="none"
+              stroke={`var(--${data.color}-500)`}
+              strokeWidth="2"
+              className={`stroke-${data.color}-500`}
+            />
+          </svg>
         </div>
       </div>
     </motion.div>

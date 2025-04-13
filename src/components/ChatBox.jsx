@@ -1,34 +1,49 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-const ChatBox = () => {
+const ChatBox = ({ doctorId, doctorName }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      sender: "system",
+      sender: "doctor",
       text: "Welcome! How can we help you today?",
-      timestamp: new Date(),
+      time: "12:04 AM",
     },
     {
       id: 2,
       sender: "doctor",
-      text: "Hi, I'm Dr. Johnson. I'll be assisting you today.",
-      timestamp: new Date(),
+      text: "Hi, I'm " + doctorName + ". I'll be assisting you today.",
+      time: "12:04 AM",
+    },
+    {
+      id: 3,
+      sender: "user",
+      text: "Hello Doctor, I have been experiencing headaches frequently this week.",
+      time: "12:05 AM",
+    },
+    {
+      id: 4,
+      sender: "doctor",
+      text: "I understand your concern. Could you tell me more about the nature of these headaches? For example, where is the pain located and how long do they typically last?",
+      time: "12:06 AM",
+    },
+    {
+      id: 5,
+      sender: "user",
+      text: "The pain is usually on one side of my head and lasts for about 2-3 hours. It gets worse with bright lights.",
+      time: "12:07 AM",
+    },
+    {
+      id: 6,
+      sender: "doctor",
+      text: "Based on your description, this could be migraine headaches. I recommend scheduling an in-person appointment for a proper evaluation. Would you like to book an appointment?",
+      time: "12:08 AM",
     },
   ]);
+
   const [newMessage, setNewMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const handleSendMessage = (e) => {
+  const handleSend = (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
@@ -36,124 +51,102 @@ const ChatBox = () => {
       id: messages.length + 1,
       sender: "user",
       text: newMessage,
-      timestamp: new Date(),
+      time: new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      }),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages([...messages, userMessage]);
     setNewMessage("");
-    setIsTyping(true);
 
     // Simulate doctor response
     setTimeout(() => {
-      const doctorMessage = {
+      const doctorResponse = {
         id: messages.length + 2,
         sender: "doctor",
-        text: "Thank you for your message. I understand your concern. Let me help you with that.",
-        timestamp: new Date(),
+        text: `I recommend coming in for a check-up so we can better assess your condition. Would you like to schedule an appointment?`,
+        time: new Date().toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        }),
       };
-      setMessages((prev) => [...prev, doctorMessage]);
-      setIsTyping(false);
-    }, 2000);
-  };
-
-  const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+      setMessages((prev) => [...prev, doctorResponse]);
+    }, 1000);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden h-[600px] flex flex-col"
-    >
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-            <span className="text-2xl">👨‍⚕️</span>
+    <div className="flex flex-col h-[600px] bg-gray-50 rounded-xl overflow-hidden">
+      {/* Chat Header */}
+      <div className="bg-blue-600 p-4 text-white">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl">
+            👨‍⚕️
           </div>
           <div>
-            <h3 className="text-white font-semibold">Dr. Johnson</h3>
-            <span className="text-blue-100 text-sm">Online</span>
+            <h2 className="text-xl font-semibold">{doctorName}</h2>
+            <div className="flex items-center">
+              <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+              <span className="text-sm text-blue-100">Online</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <AnimatePresence>
-          {messages.map((message) => (
-            <motion.div
-              key={message.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className={`flex ${
-                message.sender === "user" ? "justify-end" : "justify-start"
+        {messages.map((message) => (
+          <motion.div
+            key={message.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`flex ${
+              message.sender === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`max-w-[80%] rounded-2xl p-4 ${
+                message.sender === "user"
+                  ? "bg-blue-500 text-white ml-12"
+                  : "bg-white shadow-sm mr-12"
               }`}
             >
-              <div
-                className={`max-w-[70%] rounded-2xl p-4 ${
-                  message.sender === "user"
-                    ? "bg-blue-500 text-white"
-                    : message.sender === "system"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-green-500 text-white"
+              <p className="text-[15px]">{message.text}</p>
+              <p
+                className={`text-xs mt-1 ${
+                  message.sender === "user" ? "text-blue-100" : "text-gray-500"
                 }`}
               >
-                <p className="text-sm">{message.text}</p>
-                <span className="text-xs opacity-75 mt-1 block">
-                  {formatTime(message.timestamp)}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-        {isTyping && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center space-x-2 text-gray-500"
-          >
-            <span className="text-sm">Dr. Johnson is typing</span>
-            <motion.div
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-2 h-2 bg-gray-500 rounded-full"
-            />
+                {message.time}
+              </p>
+            </div>
           </motion.div>
-        )}
-        <div ref={messagesEndRef} />
+        ))}
       </div>
 
-      {/* Input */}
-      <form
-        onSubmit={handleSendMessage}
-        className="p-4 border-t border-gray-200"
-      >
-        <div className="flex space-x-2">
+      {/* Message Input */}
+      <form onSubmit={handleSend} className="p-4 bg-white border-t">
+        <div className="flex space-x-4">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 input-field"
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
           >
             Send
           </motion.button>
         </div>
       </form>
-    </motion.div>
+    </div>
   );
 };
 
