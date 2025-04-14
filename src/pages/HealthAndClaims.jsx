@@ -1,5 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import medicalBillsData from "../data/medicalBills";
+import prescriptionsData from "../data/prescriptions";
+import medicalHistoryData from "../data/medicalHistory";
+import insuranceClaimsData from "../data/insuranceClaims";
+import NewClaimForm from "../components/NewClaimForm";
+
+// SidebarTab component for navigation
+const SidebarTab = ({ active, onClick, icon, text }) => (
+  <motion.button
+    onClick={onClick}
+    whileTap={{ scale: 0.98 }}
+    className={`px-4 py-3 rounded-xl flex items-center space-x-3 transition-all w-full no-hover
+      ${
+        active
+          ? "bg-emerald-50 text-emerald-600 font-medium shadow-sm border border-emerald-100"
+          : "text-gray-600 border border-transparent bg-white hover:text-emerald-600"
+      }`}
+    style={{ boxShadow: "none" }}
+  >
+    <span className="text-xl">{icon}</span>
+    <span className="font-medium">{text}</span>
+  </motion.button>
+);
 
 // FlyAwayText Component
 const FlyAwayText = ({ text, position }) => (
@@ -364,73 +387,16 @@ const MedicalRecordsModal = ({ record, onClose }) => {
   );
 };
 
-// Refill Confirm Modal Component
-const RefillConfirmModal = ({ prescription, onClose }) => {
-  // Auto-close after 4 seconds
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center">
-          <div className="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-            <span className="text-2xl">💊</span>
-          </div>
-          <div className="ml-4">
-            <h3 className="text-xl font-bold text-emerald-900">
-              Refill Request Sent!
-            </h3>
-            <p className="text-gray-600 mt-1">
-              Your medicines will be delivered within 1 hour
-            </p>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 // Prescriptions Section Component
-const PrescriptionsSection = ({ prescriptions }) => {
+const PrescriptionsSection = ({ prescriptions, onRefillRequest }) => {
   const [refillRequested, setRefillRequested] = useState({});
-  const [flyAwayText, setFlyAwayText] = useState(null);
 
-  const handleRefillRequest = (prescription, event) => {
-    // Get button position for flyaway text
-    const rect = event.currentTarget.getBoundingClientRect();
-
+  const handleRefillRequest = (prescription) => {
     setRefillRequested((prev) => ({
       ...prev,
       [prescription.id]: true,
     }));
-
-    setFlyAwayText({
-      text: "Refill request sent! You'll receive your medication in 30 minutes",
-      position: {
-        x: rect.left,
-        y: rect.top,
-      },
-    });
-
-    // Clear flyaway text after animation
-    setTimeout(() => {
-      setFlyAwayText(null);
-    }, 1000);
+    onRefillRequest(prescription);
   };
 
   return (
@@ -439,16 +405,6 @@ const PrescriptionsSection = ({ prescriptions }) => {
       animate={{ opacity: 1, y: 0 }}
       className="card overflow-hidden"
     >
-      {/* Flyaway Text */}
-      <AnimatePresence>
-        {flyAwayText && (
-          <FlyAwayText
-            text={flyAwayText.text}
-            position={flyAwayText.position}
-          />
-        )}
-      </AnimatePresence>
-
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-800">
@@ -456,383 +412,93 @@ const PrescriptionsSection = ({ prescriptions }) => {
           </h2>
         </div>
       </div>
-
-      <div className="grid gap-4 p-6">
-        {prescriptions.map((prescription) => (
-          <div
-            key={prescription.id}
-            className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg font-bold text-gray-800">
-                  {prescription.name}
-                </h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  Prescribed by {prescription.prescribedBy} on{" "}
-                  {new Date(prescription.date).toLocaleDateString()}
-                </p>
-
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                  <div>
-                    <span className="text-xs text-gray-500 block">Dosage</span>
-                    <span className="font-medium text-gray-700">
-                      {prescription.dosage}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-gray-500 block">
-                      Frequency
-                    </span>
-                    <span className="font-medium text-gray-700">
-                      {prescription.frequency}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-gray-500 block">
-                      Duration
-                    </span>
-                    <span className="font-medium text-gray-700">
-                      {prescription.duration}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-xs text-gray-500 block">Refills</span>
-                    <span className="font-medium text-gray-700">
-                      {prescription.refills}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end mt-4 pt-4 border-t border-gray-100">
-              {refillRequested[prescription.id] ? (
-                <div className="px-4 py-2 bg-white text-emerald-600 rounded-lg border border-emerald-200 font-medium">
-                  Refill Requested
-                </div>
-              ) : (
-                <button
-                  onClick={(e) => handleRefillRequest(prescription, e)}
-                  className="px-4 py-2 bg-white text-rose-600 rounded-lg border border-rose-200 font-medium transition-transform duration-300 transform hover:scale-105 active:scale-95"
-                  style={{
-                    "--tw-hover-bg": "inherit",
-                    "--tw-hover-text": "inherit",
-                    "--tw-hover-border": "inherit",
-                  }}
-                >
-                  Request Refill
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {prescriptions.length === 0 && (
-        <div className="p-12 text-center">
-          <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-            <div className="text-3xl">💊</div>
-          </div>
-          <p className="text-lg font-medium text-gray-700 mb-2">
-            No Active Prescriptions
-          </p>
-          <p className="text-gray-500">
-            You don't have any active prescriptions at the moment.
-          </p>
-        </div>
-      )}
-    </motion.div>
-  );
-};
-
-// New Claim Form modal component
-const NewClaimForm = ({ onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
-    provider: "",
-    amount: "",
-    serviceType: "",
-    description: "",
-    policyNumber: "POL-123456", // Pre-filled
-    attachments: [],
-  });
-  const [fileError, setFileError] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    handleFiles(files);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const files = Array.from(e.dataTransfer.files);
-    handleFiles(files);
-  };
-
-  const handleFiles = (files) => {
-    setFileError("");
-
-    // Allow only single file
-    if (files.length > 1) {
-      setFileError("Please upload only one file at a time");
-      return;
-    }
-
-    // Validate file type
-    const allowedTypes = ["image/png", "image/jpeg", "application/pdf"];
-    if (!allowedTypes.includes(files[0].type)) {
-      setFileError("Only PNG, JPG, and PDF files are allowed");
-      return;
-    }
-
-    // Validate file size
-    if (files[0].size > 10 * 1024 * 1024) {
-      setFileError("File must be smaller than 10MB");
-      return;
-    }
-
-    setFormData({
-      ...formData,
-      attachments: files,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-    onClose();
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4"
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-      >
-        <div className="p-6 border-b border-gray-100">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-emerald-900">
-              File New Insurance Claim
-            </h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-500 text-2xl"
+      <>
+        <div className="grid gap-4 p-6">
+          {prescriptions.map((prescription) => (
+            <div
+              key={prescription.id}
+              className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
             >
-              ×
-            </button>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label
-                htmlFor="provider"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Provider Name
-              </label>
-              <input
-                type="text"
-                id="provider"
-                name="provider"
-                value={formData.provider}
-                onChange={handleChange}
-                required
-                className="form-input w-full rounded-md border-gray-300"
-                placeholder="E.g., General Hospital"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Claim Amount ($)
-              </label>
-              <input
-                type="number"
-                id="amount"
-                name="amount"
-                value={formData.amount}
-                onChange={handleChange}
-                required
-                step="0.01"
-                min="0"
-                className="form-input w-full rounded-md border-gray-300"
-                placeholder="0.00"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="serviceType"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Type of Service
-              </label>
-              <select
-                id="serviceType"
-                name="serviceType"
-                value={formData.serviceType}
-                onChange={handleChange}
-                required
-                className="form-select w-full rounded-md border-gray-300"
-              >
-                <option value="">Select service type</option>
-                <option value="consultation">Consultation</option>
-                <option value="emergency">Emergency</option>
-                <option value="dental">Dental</option>
-                <option value="vision">Vision</option>
-                <option value="laboratory">Laboratory</option>
-                <option value="imaging">Imaging/Diagnostics</option>
-                <option value="procedure">Medical Procedure</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div className="col-span-1 md:col-span-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={3}
-                className="form-textarea w-full rounded-md border-gray-300"
-                placeholder="Brief description of the services received"
-              ></textarea>
-            </div>
-
-            <div className="col-span-1 md:col-span-2">
-              <label
-                htmlFor="policyNumber"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Policy Number
-              </label>
-              <input
-                type="text"
-                id="policyNumber"
-                name="policyNumber"
-                value={formData.policyNumber}
-                onChange={handleChange}
-                disabled
-                className="form-input w-full rounded-md border-gray-300 bg-gray-50"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Your policy number is pre-filled
-              </p>
-            </div>
-
-            <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Documents
-              </label>
-              <div
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                className="flex items-center justify-center p-6 border-2 border-gray-300 border-dashed rounded-md hover:border-emerald-300 transition-colors"
-              >
-                <div className="space-y-1 text-center">
-                  <div className="text-gray-400 text-3xl mb-2">📄</div>
-                  <div className="flex text-sm text-gray-600">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500"
-                    >
-                      <span>Upload a file</span>
-                      <input
-                        id="file-upload"
-                        name="file-upload"
-                        type="file"
-                        onChange={handleFileChange}
-                        className="sr-only"
-                        accept=".png,.jpg,.jpeg,.pdf"
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    PNG, JPG, PDF up to 10MB (single file only)
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">
+                    {prescription.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Prescribed by {prescription.prescribedBy} on{" "}
+                    {new Date(prescription.date).toLocaleDateString()}
                   </p>
-                  {fileError && (
-                    <p className="text-xs text-red-500 mt-1">{fileError}</p>
-                  )}
-                  {formData.attachments.length > 0 && (
-                    <p className="text-xs text-emerald-500 mt-1">
-                      {formData.attachments[0].name} selected
-                    </p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                    <div>
+                      <span className="text-xs text-gray-500 block">
+                        Dosage
+                      </span>
+                      <span className="font-medium text-gray-700">
+                        {prescription.dosage}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500 block">
+                        Frequency
+                      </span>
+                      <span className="font-medium text-gray-700">
+                        {prescription.frequency}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500 block">
+                        Duration
+                      </span>
+                      <span className="font-medium text-gray-700">
+                        {prescription.duration}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-gray-500 block">
+                        Refills
+                      </span>
+                      <span className="font-medium text-gray-700">
+                        {prescription.refills}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end ml-4">
+                  {refillRequested[prescription.id] ? (
+                    <div className="px-4 py-2 bg-white text-emerald-600 rounded-lg border border-emerald-200 font-medium">
+                      Refill Requested
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleRefillRequest(prescription)}
+                      className="px-4 py-2 bg-white text-rose-600 rounded-lg border border-rose-200 font-medium transition-transform duration-300 transform active:scale-95 no-hover"
+                      style={{ boxShadow: "none" }}
+                    >
+                      Request Refill
+                    </button>
                   )}
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+        {prescriptions.length === 0 && (
+          <div className="p-12 text-center">
+            <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
+              <div className="text-3xl">💊</div>
+            </div>
+            <p className="text-lg font-medium text-gray-700 mb-2">
+              No Active Prescriptions
+            </p>
+            <p className="text-gray-500">
+              You don't have any active prescriptions at the moment.
+            </p>
           </div>
-
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 p-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white no-hover"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 no-hover"
-            >
-              Submit Claim
-            </button>
-          </div>
-        </form>
-      </motion.div>
+        )}
+      </>
     </motion.div>
   );
 };
-
-// Tab Button Component for vertical sidebar
-const SidebarTab = ({ active, onClick, icon, text }) => (
-  <motion.button
-    onClick={onClick}
-    whileTap={{ scale: 0.98 }}
-    className={`px-4 py-3 rounded-xl flex items-center space-x-3 transition-all w-full no-hover
-      ${
-        active
-          ? "bg-emerald-50 text-emerald-600 font-medium shadow-sm border border-emerald-100"
-          : "text-gray-600 border border-transparent"
-      }`}
-  >
-    <span className="text-xl">{icon}</span>
-    <span className="font-medium">{text}</span>
-  </motion.button>
-);
 
 // Medical Bills Section with updated buttons based on status
 const BillsSection = ({ bills, onPayBill, onViewBill }) => (
@@ -934,11 +600,6 @@ const BillsSection = ({ bills, onPayBill, onViewBill }) => (
 const HistorySection = ({ history }) => {
   const [viewingRecord, setViewingRecord] = useState(null);
 
-  // Sort history by date in descending order
-  const sortedHistory = [...history].sort(
-    (a, b) => new Date(b.diagnosedDate) - new Date(a.diagnosedDate)
-  );
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -962,7 +623,7 @@ const HistorySection = ({ history }) => {
       </div>
 
       <div className="grid gap-4 p-6">
-        {sortedHistory.map((record) => (
+        {history.map((record) => (
           <div
             key={record.id}
             className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
@@ -1133,128 +794,30 @@ const HealthAndClaims = () => {
   const [showNewClaimForm, setShowNewClaimForm] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // For adding a new claim temporarily
-  const [claims, setClaims] = useState([
-    {
-      id: 1,
-      claimNumber: "CLM-23456",
-      dateSubmitted: "2025-03-25",
-      amount: 378.45,
-      status: "approved",
-      paymentDate: "2025-04-01",
-      coverage: "Full Coverage",
-    },
-    {
-      id: 2,
-      claimNumber: "CLM-23422",
-      dateSubmitted: "2025-02-12",
-      amount: 125.0,
-      status: "pending",
-      paymentDate: null,
-      coverage: "Partial (80%)",
-    },
-    {
-      id: 3,
-      claimNumber: "CLM-23301",
-      dateSubmitted: "2025-01-20",
-      amount: 75.5,
-      status: "approved",
-      paymentDate: "2025-01-27",
-      coverage: "Full Coverage",
-    },
-  ]);
+  // Add refill handler at the parent level
+  const handleRefillRequest = (prescription) => {
+    setToast({
+      message: `Refill request sent for ${prescription.name}! You will receive your medication in 30 minutes.`,
+      type: "success"
+    });
+  };
 
-  // Mock data for bills section with ability to pay
-  const [medicalBills, setMedicalBills] = useState([
-    {
-      id: 1,
-      date: "2025-03-22",
-      provider: "General Hospital",
-      amount: 378.45,
-      status: "paid",
-      service: "Consultation + Lab Tests",
-    },
-    {
-      id: 2,
-      date: "2025-02-10",
-      provider: "City Medical Center",
-      amount: 125.0,
-      status: "pending",
-      service: "X-Ray",
-    },
-    {
-      id: 3,
-      date: "2025-01-15",
-      provider: "Dr. Williams Clinic",
-      amount: 75.5,
-      status: "paid",
-      service: "Follow-up Visit",
-    },
-  ]);
-
-  const prescriptions = [
-    {
-      id: 1,
-      name: "Amoxicillin",
-      prescribedBy: "Dr. Sarah Lee",
-      date: "2025-03-20",
-      dosage: "500mg",
-      frequency: "3 times daily",
-      duration: "7 days",
-      refills: 2,
-    },
-    {
-      id: 2,
-      name: "Loratadine",
-      prescribedBy: "Dr. Michael Chen",
-      date: "2025-02-28",
-      dosage: "10mg",
-      frequency: "Once daily",
-      duration: "30 days",
-      refills: 2,
-    },
-    {
-      id: 3,
-      name: "Metformin",
-      prescribedBy: "Dr. James Wilson",
-      date: "2025-01-10",
-      dosage: "850mg",
-      frequency: "Twice daily",
-      duration: "90 days",
-      refills: 3,
-    },
-  ];
-
-  const medicalHistory = [
-    {
-      id: 1,
-      condition: "Hypertension",
-      diagnosedDate: "2023-06-15",
-      treatedBy: "Dr. James Wilson",
-      status: "ongoing",
-      notes: "Being managed with regular medication",
-    },
-    {
-      id: 2,
-      condition: "Respiratory Infection",
-      diagnosedDate: "2024-11-10",
-      treatedBy: "Dr. Sarah Lee",
-      status: "resolved",
-      notes: "Treated with antibiotics for 10 days",
-    },
-    {
-      id: 3,
-      condition: "Seasonal Allergies",
-      diagnosedDate: "2022-03-22",
-      treatedBy: "Dr. Michael Chen",
-      status: "recurring",
-      notes: "Flares up in spring, managed with antihistamines",
-    },
-  ];
-
-  // Sort medical history by diagnosed date in descending order
-  const sortedMedicalHistory = [...medicalHistory].sort(
-    (a, b) => new Date(b.diagnosedDate) - new Date(a.diagnosedDate)
+  // Sort all data by date descending (recent first)
+  const [medicalBills, setMedicalBills] = useState(
+    [...medicalBillsData].sort((a, b) => new Date(b.date) - new Date(a.date))
+  );
+  const [prescriptions] = useState(
+    [...prescriptionsData].sort((a, b) => new Date(b.date) - new Date(a.date))
+  );
+  const [history] = useState(
+    [...medicalHistoryData].sort(
+      (a, b) => new Date(b.diagnosedDate) - new Date(a.diagnosedDate)
+    )
+  );
+  const [claims, setClaims] = useState(
+    [...insuranceClaimsData].sort(
+      (a, b) => new Date(b.dateSubmitted) - new Date(a.dateSubmitted)
+    )
   );
 
   // Handle showing payment success toast
@@ -1313,7 +876,7 @@ const HealthAndClaims = () => {
       animate={{ opacity: 1 }}
       className="max-w-7xl mx-auto px-4 py-8"
     >
-      {/* Toast notification */}
+      {/* Single Toast notification for all actions */}
       <AnimatePresence>
         {toast && (
           <Toast
@@ -1363,42 +926,43 @@ const HealthAndClaims = () => {
         <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-purple-300 rounded-full filter blur-xl opacity-10"></div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Sidebar navigation */}
-        <div className="md:col-span-1">
-          <div className="bg-gray-50 rounded-xl p-4 sticky top-6">
-            <div className="space-y-1">
-              <SidebarTab
-                active={activeTab === "bills"}
-                onClick={() => setActiveTab("bills")}
-                icon="💳"
-                text="Medical Bills"
-              />
-              <SidebarTab
-                active={activeTab === "prescriptions"}
-                onClick={() => setActiveTab("prescriptions")}
-                icon="💊"
-                text="Prescriptions"
-              />
-              <SidebarTab
-                active={activeTab === "history"}
-                onClick={() => setActiveTab("history")}
-                icon="📋"
-                text="Medical History"
-              />
-              <SidebarTab
-                active={activeTab === "claims"}
-                onClick={() => setActiveTab("claims")}
-                icon="📝"
-                text="Insurance Claims"
-              />
+      <div className="flex gap-6">
+        {/* Fixed Sidebar */}
+        <div className="w-64 flex-shrink-0">
+          <div className="sticky top-8">
+            <div className="bg-gray-50 rounded-xl p-4">
+              <div className="space-y-1">
+                <SidebarTab
+                  active={activeTab === "bills"}
+                  onClick={() => setActiveTab("bills")}
+                  icon="💳"
+                  text="Medical Bills"
+                />
+                <SidebarTab
+                  active={activeTab === "prescriptions"}
+                  onClick={() => setActiveTab("prescriptions")}
+                  icon="💊"
+                  text="Prescriptions"
+                />
+                <SidebarTab
+                  active={activeTab === "history"}
+                  onClick={() => setActiveTab("history")}
+                  icon="📋"
+                  text="Medical History"
+                />
+                <SidebarTab
+                  active={activeTab === "claims"}
+                  onClick={() => setActiveTab("claims")}
+                  icon="📝"
+                  text="Insurance Claims"
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Main content area */}
-        <div className="md:col-span-3">
-          {/* Content based on selected tab */}
+        {/* Main Content Area */}
+        <div className="flex-1">
           {activeTab === "bills" && (
             <BillsSection
               bills={medicalBills}
@@ -1408,12 +972,13 @@ const HealthAndClaims = () => {
           )}
 
           {activeTab === "prescriptions" && (
-            <PrescriptionsSection prescriptions={prescriptions} />
+            <PrescriptionsSection 
+              prescriptions={prescriptions}
+              onRefillRequest={handleRefillRequest} 
+            />
           )}
 
-          {activeTab === "history" && (
-            <HistorySection history={sortedMedicalHistory} />
-          )}
+          {activeTab === "history" && <HistorySection history={history} />}
 
           {activeTab === "claims" && (
             <ClaimsSection
