@@ -93,7 +93,7 @@ const ClientProfile = () => {
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
       </div>
 
-      {/* Flyaway Animation - Updated positioning and styling */}
+      {/* Flyaway Animation - Centered, no confetti */}
       <AnimatePresence>
         {showFlyaway && (
           <motion.div
@@ -102,24 +102,16 @@ const ClientProfile = () => {
             exit={{ opacity: 0, y: -100 }}
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-center"
           >
-            <motion.div
-              initial={{ scale: 0.5 }}
-              animate={{ scale: [0.5, 1.2, 1] }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl mb-3"
-            >
-              🎉
-            </motion.div>
             <div className="bg-white px-8 py-4 rounded-xl shadow-xl text-center">
-              <p className="text-emerald-600 font-medium text-lg">
-                Your profile summary has been shared!
+              <p className="text-emerald-700 font-medium text-lg">
+                Your profile has been shared!
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Share Profile Modal - Updated with name and button styling */}
+      {/* Share Profile Modal - Updated X button style */}
       <AnimatePresence>
         {showShareModal && (
           <motion.div
@@ -140,7 +132,9 @@ const ClientProfile = () => {
                 </h3>
                 <button
                   onClick={() => setShowShareModal(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+                  style={{ lineHeight: 1 }}
+                  aria-label="Close"
                 >
                   ×
                 </button>
