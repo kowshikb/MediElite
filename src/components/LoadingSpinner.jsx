@@ -50,7 +50,7 @@ const LoadingSpinner = ({ size = "default", text = "Loading..." }) => {
           variants={circleVariants}
           initial="hidden"
           animate="visible"
-          className="absolute inset-0 rounded-full border-4 border-blue-200"
+          className="absolute inset-0 rounded-full border-4 border-emerald-200"
         />
 
         {/* Spinning Circle */}
@@ -63,14 +63,14 @@ const LoadingSpinner = ({ size = "default", text = "Loading..." }) => {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute inset-0 rounded-full border-t-4 border-blue-500"
+          className="absolute inset-0 rounded-full border-t-4 border-emerald-500"
         />
 
         {/* Pulsing Background */}
         <motion.div
           variants={pulseVariants}
           animate="animate"
-          className="absolute inset-2 rounded-full bg-blue-50"
+          className="absolute inset-2 rounded-full bg-emerald-50"
         />
 
         {/* Medical Cross */}
@@ -81,11 +81,11 @@ const LoadingSpinner = ({ size = "default", text = "Loading..." }) => {
         >
           <div className="relative w-8 h-8">
             <div
-              className="absolute inset-0 bg-blue-500 rounded-md transform rotate-0"
+              className="absolute inset-0 bg-emerald-500 rounded-md transform rotate-0"
               style={{ width: "25%", left: "37.5%" }}
             />
             <div
-              className="absolute inset-0 bg-blue-500 rounded-md transform rotate-90"
+              className="absolute inset-0 bg-emerald-500 rounded-md transform rotate-90"
               style={{ height: "25%", top: "37.5%" }}
             />
           </div>

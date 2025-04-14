@@ -20,6 +20,7 @@ const App = () => {
     client: [
       { name: "Dashboard", path: "/client/dashboard", icon: "🏠" },
       { name: "Find Doctor", path: "/client/find-doctor", icon: "👨‍⚕️" },
+      { name: "Health & Claims", path: "/client/health-claims", icon: "💚" },
       { name: "Profile", path: "/client/profile", icon: "👤" },
     ],
     doctor: [
@@ -38,7 +39,7 @@ const App = () => {
   return (
     <AppointmentProvider>
       <NotificationContext.Provider value={notificationContextValue}>
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30">
           <nav className="bg-white/80 backdrop-blur-lg fixed w-full z-50 border-b border-gray-100">
             <div className="max-w-7xl mx-auto px-4">
               <div className="flex justify-between h-16">
@@ -79,8 +80,8 @@ const App = () => {
                   to={item.path}
                   className={`flex flex-col items-center justify-center p-2 rounded-xl ${
                     location.pathname === item.path
-                      ? "gradient-text bg-blue-50"
-                      : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                      ? "gradient-text bg-emerald-50"
+                      : "text-gray-600 hover:text-emerald-600 hover:bg-gray-50"
                   } transition-all duration-300`}
                 >
                   <span className="text-xl mb-1">{item.icon}</span>
@@ -122,12 +123,12 @@ const App = () => {
                 <div
                   className={`shadow-lg rounded-2xl p-4 backdrop-blur-md border transform transition-all duration-300 hover:shadow-xl ${
                     notification.type === "success"
-                      ? "bg-green-500/90 text-white border-green-400"
+                      ? "bg-emerald-500/90 text-white border-emerald-400"
                       : notification.type === "error"
                       ? "bg-red-500/90 text-white border-red-400"
                       : notification.type === "warning"
                       ? "bg-amber-500/90 text-white border-amber-400"
-                      : "bg-blue-500/90 text-white border-blue-400"
+                      : "bg-emerald-500/90 text-white border-emerald-400"
                   }`}
                 >
                   <p className="text-sm font-medium shadow-sm">

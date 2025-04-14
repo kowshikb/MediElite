@@ -74,17 +74,22 @@ const DoctorDirectory = () => {
       animate={{ opacity: 1 }}
       className="max-w-7xl mx-auto px-4 py-8"
     >
-      {/* Header */}
-      <div className="relative overflow-hidden glass-card bg-gradient-to-r from-blue-400 to-blue-500 rounded-3xl p-8 md:p-12">
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Find a Doctor
-          </h1>
-          <p className="text-blue-100 text-lg">
-            Browse our network of trusted healthcare professionals
-          </p>
+      {/* Enhanced Header with improved gradient styling */}
+      <div className="relative overflow-hidden glass-card bg-gradient-to-r from-emerald-700 to-green-400 rounded-3xl p-4 md:p-6 mb-6">
+        <div className="relative z-10 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
+              Find a Doctor, Kowshik Kumar
+            </h1>
+            <p className="text-blue-100 text-sm md:text-base">
+              Browse our network of trusted healthcare professionals
+            </p>
+          </div>
+          <div className="hidden md:block"></div>
         </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+        {/* Enhanced decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-sky-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-20 w-32 h-32 bg-blue-300 rounded-full filter blur-xl opacity-20"></div>
       </div>
 
       {/* Filters */}

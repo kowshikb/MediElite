@@ -1,8 +1,29 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const ClientProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showFlyaway, setShowFlyaway] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Scroll to top when the component mounts, especially if scrollToTop state is present
+    if (location.state?.scrollToTop) {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
+
+  const handleShare = () => {
+    setShowShareModal(true);
+  };
+
+  const shareProfile = () => {
+    setShowFlyaway(true);
+    setShowShareModal(false);
+    setTimeout(() => setShowFlyaway(false), 3000);
+  };
 
   const user = {
     name: "kowshik kumar",
@@ -29,31 +50,188 @@ const ClientProfile = () => {
       className="max-w-7xl mx-auto px-4 py-8 space-y-8"
     >
       {/* Profile Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-400 to-blue-500 rounded-3xl p-8 md:p-12">
+      <div className="relative overflow-hidden glass-card bg-gradient-to-r from-emerald-700 to-green-400 rounded-3xl p-4 md:p-6">
         <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl md:text-5xl shadow-xl ring-4 ring-white/30">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl shadow-xl ring-2 ring-white/30">
               👤
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
-              {user.name}
-            </h1>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white capitalize">
+                {user.name}
+              </h1>
+              <p className="text-blue-100 text-sm md:text-base">
+                View and manage your profile
+              </p>
+            </div>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsEditing(!isEditing)}
-            className={`${
-              isEditing
-                ? "bg-white text-blue-600 hover:bg-gray-100"
-                : "bg-white/90 text-blue-600 hover:bg-white"
-            } px-6 py-2.5 rounded-xl font-medium transition-all duration-200 hover:shadow-lg`}
-          >
-            {isEditing ? "Save Changes" : "Edit Profile"}
-          </motion.button>
+          <div className="flex gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsEditing(!isEditing)}
+              className={`${
+                isEditing
+                  ? "bg-white text-blue-600 hover:bg-gray-100"
+                  : "bg-white/90 text-blue-600 hover:bg-white"
+              } px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2`}
+            >
+              <span className="text-lg">✏️</span>
+              {isEditing ? "Save Changes" : "Edit Profile"}
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleShare}
+              className="bg-white/90 text-blue-600 hover:bg-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2"
+            >
+              <span className="text-lg">📤</span>
+              Share Profile
+            </motion.button>
+          </div>
         </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
       </div>
+
+      {/* Flyaway Animation - Updated positioning and styling */}
+      <AnimatePresence>
+        {showFlyaway && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: -50 }}
+            exit={{ opacity: 0, y: -100 }}
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: [0.5, 1.2, 1] }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl mb-3"
+            >
+              🎉
+            </motion.div>
+            <div className="bg-white px-8 py-4 rounded-xl shadow-xl text-center">
+              <p className="text-emerald-600 font-medium text-lg">
+                Your profile summary has been shared!
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Share Profile Modal - Updated with name and button styling */}
+      <AnimatePresence>
+        {showShareModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Share {user.name}'s Profile Summary
+                </h3>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {/* Profile Summary Card */}
+                <div className="bg-gray-50 p-4 rounded-xl space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">❤️</span>
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        Current Heart Rate
+                      </p>
+                      <p className="font-medium">72 bpm</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🩸</span>
+                    <div>
+                      <p className="text-sm text-gray-600">Blood Type</p>
+                      <p className="font-medium">{user.bloodType}</p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-3">
+                    <h4 className="font-medium mb-2">Medical Conditions</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {user.conditions.map((condition) => (
+                        <span
+                          key={condition}
+                          className="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm"
+                        >
+                          {condition}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-3">
+                    <h4 className="font-medium mb-2">Current Medications</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {user.medications.map((med) => (
+                        <span
+                          key={med}
+                          className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm"
+                        >
+                          {med}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-3">
+                    <h4 className="font-medium mb-2">Allergies</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {user.allergies.map((allergy) => (
+                        <span
+                          key={allergy}
+                          className="px-2 py-1 bg-red-50 text-red-700 rounded-lg text-sm"
+                        >
+                          {allergy}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 mt-6">
+                  <button
+                    onClick={() => setShowShareModal(false)}
+                    className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={shareProfile}
+                    className="px-4 py-2 bg-white text-emerald-600 rounded-lg border border-emerald-200 flex items-center gap-2"
+                  >
+                    <span>Share Profile</span>
+                    <span className="text-lg">📤</span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Profile Content */}
       <div className="grid gap-8 md:grid-cols-2">
