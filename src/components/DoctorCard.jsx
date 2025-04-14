@@ -60,100 +60,158 @@ const DoctorCard = ({ doctor }) => {
   return (
     <>
       <motion.div
-        whileHover={{ y: -5 }}
-        className="card h-full flex flex-col group"
+        whileHover={{ y: -8, scale: 1.01 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        className="card h-full flex flex-col group overflow-hidden"
       >
+        {/* Doctor Image with Enhanced Visual Effects */}
         <div className="relative">
           <img
             src={image}
             alt={name}
-            className="w-full h-64 object-cover rounded-t-2xl"
+            className="w-full h-72 object-cover rounded-t-2xl"
             onError={(e) => {
-              e.target.src = `https://ui-avatars.com/api/?name=${name}&size=400&background=0D8ABC&color=fff`;
+              e.target.src = `https://ui-avatars.com/api/?name=${name}&size=400&background=059669&color=fff&bold=true`;
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          {/* Gradient Overlay with Enhanced Opacity*/}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent rounded-t-2xl opacity-20 group-hover:opacity-70 transition-all duration-300" />
+
+          {/* Status Badge with enhanced styling */}
           {availability ? (
-            <span className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-green-500 text-white shadow-lg backdrop-blur-sm">
+            <motion.span
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-500 text-white shadow-lg backdrop-blur-md border border-emerald-400/50 flex items-center"
+            >
+              <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
               Available Now
-            </span>
+            </motion.span>
           ) : (
-            <span className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-red-500 text-white shadow-lg backdrop-blur-sm">
+            <motion.span
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-sm font-medium bg-rose-500 text-white shadow-lg backdrop-blur-md border border-rose-400/50"
+            >
               Unavailable
-            </span>
+            </motion.span>
           )}
+
+          {/* Decorative elements */}
+          <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-emerald-500/10 rounded-full"></div>
+          <div className="absolute -bottom-10 left-8 w-16 h-16 bg-emerald-500/5 rounded-full"></div>
         </div>
 
         <div className="p-6 flex-grow">
-          <div className="flex justify-between items-start mb-4">
+          {/* Doctor Info Header */}
+          <div className="flex justify-between items-start mb-5">
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">{name}</h3>
-              <p className="text-blue-600 font-medium">{specialty}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-1 bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-emerald-500">
+                {name}
+              </h3>
+              <p className="text-emerald-600 font-medium">{specialty}</p>
               <p className="text-sm text-gray-600">{subspecialty}</p>
             </div>
-            <div className="flex items-center bg-blue-50 px-3 py-1.5 rounded-lg">
-              <span className="text-yellow-500 mr-1.5">⭐</span>
-              <span className="text-blue-700 font-medium">{rating}</span>
+            <div className="flex items-center bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 shadow-sm">
+              <span className="text-amber-500 mr-1.5 text-lg">⭐</span>
+              <span className="text-amber-700 font-semibold">{rating}</span>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center text-gray-600">
-              <span className="text-xl mr-3">👨‍⚕️</span>
-              <span className="font-medium">{experience} experience</span>
-            </div>
+          {/* Doctor Details */}
+          <div className="space-y-5">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex items-center text-gray-600 bg-indigo-50/50 p-2 rounded-lg"
+            >
+              <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                <span className="text-lg">👨‍⚕️</span>
+              </div>
+              <span className="font-medium text-indigo-900">
+                {experience} experience
+              </span>
+            </motion.div>
 
-            <div className="space-y-2">
-              <div className="flex items-start">
-                <span className="text-xl mr-3">🎓</span>
+            <div className="space-y-3 bg-white p-3 rounded-xl border border-gray-100/80">
+              {/* Qualifications */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex items-start"
+              >
+                <div className="p-2 bg-sky-50 rounded-lg mr-3 self-start">
+                  <span className="text-lg">🎓</span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {qualifications.map((qual, index) => (
                     <span
                       key={index}
-                      className="px-2.5 py-1 text-sm bg-blue-50 text-blue-700 rounded-lg font-medium"
+                      className="px-2.5 py-1 text-sm bg-sky-50 text-sky-700 rounded-lg font-medium border border-sky-100"
                     >
                       {qual}
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-start">
-                <span className="text-xl mr-3">🗣️</span>
+              {/* Languages */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-start"
+              >
+                <div className="p-2 bg-slate-50 rounded-lg mr-3 self-start">
+                  <span className="text-lg">🗣️</span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {languages.map((lang, index) => (
                     <span
                       key={index}
-                      className="px-2.5 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg font-medium"
+                      className="px-2.5 py-1 text-sm bg-slate-50 text-slate-700 rounded-lg font-medium border border-slate-100"
                     >
                       {lang}
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-start">
-                <span className="text-xl mr-3">🔬</span>
+              {/* Specializations */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-start"
+              >
+                <div className="p-2 bg-emerald-50 rounded-lg mr-3 self-start">
+                  <span className="text-lg">🔬</span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {specializations.map((spec, index) => (
                     <span
                       key={index}
-                      className="px-2.5 py-1 text-sm bg-green-50 text-green-700 rounded-lg font-medium"
+                      className="px-2.5 py-1 text-sm bg-emerald-50 text-emerald-700 rounded-lg font-medium border border-emerald-100"
                     >
                       {spec}
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
 
+        {/* Card Footer with Action Buttons */}
         <div className="p-6 border-t border-gray-100">
           <div className="flex gap-3">
             <motion.button
-              whileHover={availability ? { scale: 1.02 } : {}}
-              whileTap={availability ? { scale: 0.98 } : {}}
+              whileHover={availability ? { scale: 1.03, y: -2 } : {}}
+              whileTap={availability ? { scale: 0.97 } : {}}
               onClick={handleBookAppointment}
               className={`flex-1 ${
                 hasExistingAppointment ? "btn-secondary" : "btn-primary"
@@ -169,21 +227,22 @@ const DoctorCard = ({ doctor }) => {
             </motion.button>
 
             <motion.button
-              whileHover={availability ? { scale: 1.02 } : {}}
-              whileTap={availability ? { scale: 0.98 } : {}}
+              whileHover={availability ? { scale: 1.03, y: -2 } : {}}
+              whileTap={availability ? { scale: 0.97 } : {}}
               onClick={handleMessageDoctor}
               className={`btn-secondary flex items-center justify-center ${
                 !availability && "opacity-50 cursor-not-allowed"
               }`}
               disabled={!availability}
             >
-              <span>💬</span>
+              <span className="mr-1">💬</span>
+              <span>Chat</span>
             </motion.button>
           </div>
         </div>
       </motion.div>
 
-      {/* Booking Modal */}
+      {/* Booking Modal with Enhanced Styling */}
       <AnimatePresence>
         {showBookingModal && (
           <motion.div
@@ -193,22 +252,25 @@ const DoctorCard = ({ doctor }) => {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           >
             <motion.div
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              className="card max-w-lg w-full overflow-hidden"
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              className="card max-w-lg w-full overflow-hidden shadow-2xl"
             >
-              <div className="p-6 border-b border-gray-100">
+              <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-white">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl font-bold text-emerald-900 flex items-center">
+                    <span className="text-xl mr-3">📅</span>
                     Book Appointment with {name}
                   </h3>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setShowBookingModal(false)}
-                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                    className="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-light focus:outline-none"
                   >
                     ×
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               <div className="p-6">
@@ -222,7 +284,7 @@ const DoctorCard = ({ doctor }) => {
         )}
       </AnimatePresence>
 
-      {/* Chat Modal */}
+      {/* Chat Modal with Enhanced Design */}
       <AnimatePresence>
         {showChatModal && (
           <motion.div
@@ -232,21 +294,24 @@ const DoctorCard = ({ doctor }) => {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           >
             <motion.div
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              className="card w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden"
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              className="card w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden shadow-2xl"
             >
-              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-gray-900">
+              <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-emerald-50 to-white">
+                <h3 className="text-xl font-bold text-emerald-900 flex items-center">
+                  <span className="text-xl mr-3">💬</span>
                   Chat with {name}
                 </h3>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setShowChatModal(false)}
-                  className="text-gray-400 hover:text-gray-500 transition-colors"
+                  className="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-light focus:outline-none"
                 >
                   ×
-                </button>
+                </motion.button>
               </div>
               <div className="flex-grow overflow-hidden">
                 <ChatBox doctorId={doctor.id} doctorName={name} />

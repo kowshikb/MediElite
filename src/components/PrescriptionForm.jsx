@@ -53,7 +53,8 @@ const PrescriptionForm = ({ onSubmit, patientDetails }) => {
       >
         {/* Patient Details */}
         <div className="card p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
+          <h3 className="text-xl font-bold text-emerald-900 mb-4 flex items-center">
+            <span className="text-2xl mr-3">👤</span>
             Patient Information
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -79,13 +80,16 @@ const PrescriptionForm = ({ onSubmit, patientDetails }) => {
         {/* Medications */}
         <div className="card p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Medications</h3>
+            <h3 className="text-xl font-bold text-emerald-900 flex items-center">
+              <span className="text-2xl mr-3">💊</span>
+              Medications
+            </h3>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={handleAddMedication}
-              className="btn-secondary flex items-center space-x-2"
+              className="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors flex items-center space-x-2"
             >
               <span>➕</span>
               <span>Add Medication</span>
@@ -206,7 +210,8 @@ const PrescriptionForm = ({ onSubmit, patientDetails }) => {
 
         {/* Notes */}
         <div className="card p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
+          <h3 className="text-xl font-bold text-emerald-900 mb-4 flex items-center">
+            <span className="text-2xl mr-3">📝</span>
             Additional Notes
           </h3>
           <textarea
@@ -241,37 +246,35 @@ const PrescriptionForm = ({ onSubmit, patientDetails }) => {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
           >
             <motion.div
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              className="card max-w-lg w-full"
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 10 }}
+              className="bg-white rounded-xl p-6 max-w-md w-full shadow-xl"
             >
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Confirm Prescription
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Are you sure you want to generate this prescription? This
-                  action cannot be undone.
-                </p>
-                <div className="flex justify-end space-x-3">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowConfirmation(false)}
-                    className="btn-secondary"
-                  >
-                    Cancel
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={confirmSubmit}
-                    className="btn-primary"
-                  >
-                    Confirm
-                  </motion.button>
-                </div>
+              <h3 className="text-xl font-bold text-emerald-900 mb-4">
+                Confirm Prescription
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Please review and confirm the prescription details before
+                proceeding.
+              </p>
+              <div className="flex justify-end space-x-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowConfirmation(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Review Again
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={confirmSubmit}
+                  className="btn-primary"
+                >
+                  Confirm & Submit
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>
