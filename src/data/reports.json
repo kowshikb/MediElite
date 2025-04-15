@@ -1,212 +1,50 @@
 [
     {
         "id": 1,
-        "patientId": 1,
-        "doctorId": 1,
-        "date": "2025-04-10",
-        "type": "ECG",
-        "category": "Cardiology",
-        "title": "Routine ECG Examination",
-        "description": "12-lead ECG for heart rhythm evaluation",
-        "findings": "Normal sinus rhythm, no ST-T wave changes",
-        "recommendation": "Follow-up in 6 months",
-        "status": "Completed",
-        "fileUrl": "/reports/ecg_20250410.pdf",
-        "normalRange": {
-            "heartRate": "60-100 bpm",
-            "prInterval": "120-200 ms",
-            "qrsInterval": "80-120 ms"
-        },
-        "results": {
-            "heartRate": "72 bpm",
-            "prInterval": "160 ms",
-            "qrsInterval": "90 ms"
-        }
+        "reportType": "X-ray",
+        "reportCenterName": "City Diagnostics",
+        "reportDate": "2025-04-10",
+        "doctorName": "Dr. Smith",
+        "status": "Completed"
     },
     {
         "id": 2,
-        "patientId": 2,
-        "doctorId": 6,
-        "date": "2025-04-11",
-        "type": "Blood Test",
-        "category": "Laboratory",
-        "title": "Complete Blood Count",
-        "description": "Routine blood work including CBC, metabolic panel",
-        "findings": "Slightly elevated white blood cell count",
-        "recommendation": "Repeat test in 2 weeks",
-        "status": "Completed",
-        "fileUrl": "/reports/blood_test_20250411.pdf",
-        "normalRange": {
-            "wbc": "4.5-11.0 K/µL",
-            "rbc": "4.5-5.9 M/µL",
-            "hemoglobin": "13.5-17.5 g/dL",
-            "platelets": "150-450 K/µL"
-        },
-        "results": {
-            "wbc": "11.5 K/µL",
-            "rbc": "5.2 M/µL",
-            "hemoglobin": "14.8 g/dL",
-            "platelets": "275 K/µL"
-        }
+        "reportType": "ECG",
+        "reportCenterName": "Heart Care Center",
+        "reportDate": "2025-04-12",
+        "doctorName": "Dr. Brown",
+        "status": "Pending"
     },
     {
         "id": 3,
-        "patientId": 3,
-        "doctorId": 2,
-        "date": "2025-04-12",
-        "type": "MRI",
-        "category": "Radiology",
-        "title": "Brain MRI with Contrast",
-        "description": "MRI of the brain for headache evaluation",
-        "findings": "No acute intracranial abnormality",
-        "recommendation": "Clinical correlation advised",
-        "status": "Completed",
-        "fileUrl": "/reports/mri_brain_20250412.pdf",
-        "sequences": [
-            "T1-weighted",
-            "T2-weighted",
-            "FLAIR",
-            "DWI"
-        ],
-        "radiologist": "Dr. Sarah Thompson"
+        "reportType": "MRI",
+        "reportCenterName": "Advanced Imaging",
+        "reportDate": "2025-04-08",
+        "doctorName": "Dr. Taylor",
+        "status": "Completed"
     },
     {
         "id": 4,
-        "patientId": 5,
-        "doctorId": 5,
-        "date": "2025-04-13",
-        "type": "Biopsy",
-        "category": "Pathology",
-        "title": "Skin Lesion Biopsy",
-        "description": "Microscopic examination of suspicious mole",
-        "findings": "Benign melanocytic nevus",
-        "recommendation": "Regular skin checks",
-        "status": "Completed",
-        "fileUrl": "/reports/biopsy_20250413.pdf",
-        "specimen": {
-            "type": "Skin punch biopsy",
-            "size": "4mm",
-            "location": "Upper back"
-        }
+        "reportType": "Blood Test",
+        "reportCenterName": "Health Diagnostics",
+        "reportDate": "2025-04-14",
+        "doctorName": "Dr. Emily Carter",
+        "status": "Completed"
     },
     {
         "id": 5,
-        "patientId": 7,
-        "doctorId": 4,
-        "date": "2025-04-13",
-        "type": "X-Ray",
-        "category": "Radiology",
-        "title": "Right Knee X-Ray",
-        "description": "Post-operative follow-up imaging",
-        "findings": "Hardware in good position, no loosening",
-        "recommendation": "Continue physical therapy",
-        "status": "Completed",
-        "fileUrl": "/reports/xray_knee_20250413.pdf",
-        "views": [
-            "AP",
-            "Lateral",
-            "Sunrise"
-        ]
+        "reportType": "CT Scan",
+        "reportCenterName": "Advanced Imaging Center",
+        "reportDate": "2025-04-13",
+        "doctorName": "Dr. Alan Grant",
+        "status": "Pending"
     },
     {
         "id": 6,
-        "patientId": 4,
-        "doctorId": 3,
-        "date": "2025-04-13",
-        "type": "Growth Chart",
-        "category": "Pediatrics",
-        "title": "Annual Growth Assessment",
-        "description": "Height and weight measurements",
-        "findings": "Growth tracking along 75th percentile",
-        "recommendation": "Continue regular monitoring",
-        "status": "Completed",
-        "fileUrl": "/reports/growth_chart_20250413.pdf",
-        "measurements": {
-            "height": "127 cm",
-            "weight": "26 kg",
-            "bmi": "16.1"
-        }
-    },
-    {
-        "id": 7,
-        "patientId": 6,
-        "doctorId": 7,
-        "date": "2025-04-13",
-        "type": "Psychological Assessment",
-        "category": "Psychiatry",
-        "title": "Anxiety Evaluation",
-        "description": "Follow-up assessment of anxiety symptoms",
-        "findings": "Improved anxiety scores",
-        "recommendation": "Continue current treatment plan",
-        "status": "Completed",
-        "fileUrl": "/reports/psych_assessment_20250413.pdf",
-        "scores": {
-            "gad7": "8 (Previously 15)",
-            "phq9": "5 (Previously 12)"
-        }
-    },
-    {
-        "id": 8,
-        "patientId": 1,
-        "doctorId": 1,
-        "date": "2025-04-13",
-        "type": "Stress Test",
-        "category": "Cardiology",
-        "title": "Treadmill Stress Test",
-        "description": "Exercise stress test for cardiac evaluation",
-        "findings": "No exercise-induced ischemic changes",
-        "recommendation": "Maintain current activity level",
-        "status": "Completed",
-        "fileUrl": "/reports/stress_test_20250413.pdf",
-        "results": {
-            "maxHeartRate": "150 bpm",
-            "maxBP": "165/85 mmHg",
-            "duration": "9 minutes",
-            "mets": "10.2"
-        }
-    },
-    {
-        "id": 9,
-        "patientId": 8,
-        "doctorId": 8,
-        "date": "2025-04-13",
-        "type": "Audiometry",
-        "category": "ENT",
-        "title": "Hearing Test",
-        "description": "Complete audiological evaluation",
-        "findings": "Mild high-frequency hearing loss",
-        "recommendation": "Annual follow-up recommended",
-        "status": "Completed",
-        "fileUrl": "/reports/audiometry_20250413.pdf",
-        "results": {
-            "rightEar": {
-                "lowFreq": "15 dB",
-                "highFreq": "35 dB"
-            },
-            "leftEar": {
-                "lowFreq": "15 dB",
-                "highFreq": "30 dB"
-            }
-        }
-    },
-    {
-        "id": 10,
-        "patientId": 2,
-        "doctorId": 5,
-        "date": "2025-04-13",
-        "type": "Allergy Test",
-        "category": "Immunology",
-        "title": "Skin Prick Test",
-        "description": "Environmental allergen panel",
-        "findings": "Positive reactions to dust mites and pollen",
-        "recommendation": "Allergen avoidance measures discussed",
-        "status": "Completed",
-        "fileUrl": "/reports/allergy_test_20250413.pdf",
-        "results": {
-            "dustMites": "3+ reaction",
-            "pollen": "2+ reaction",
-            "pet dander": "Negative",
-            "mold": "1+ reaction"
-        }
+        "reportType": "Ultrasound",
+        "reportCenterName": "City Medical Lab",
+        "reportDate": "2025-04-12",
+        "doctorName": "Dr. Laura Wilson",
+        "status": "Completed"
     }
 ]

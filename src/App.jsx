@@ -13,14 +13,14 @@ const App = () => {
 
   const addNotification = (message, type = "info") => {
     setNotification({ id: Date.now(), message, type });
-    setTimeout(() => setNotification(null), 4000); // Increased duration to 5 seconds
+    setTimeout(() => setNotification(null), 4000);
   };
 
   const navigation = {
     client: [
       { name: "Dashboard", path: "/client/dashboard", icon: "🏠" },
       { name: "Find Doctor", path: "/client/find-doctor", icon: "👨‍⚕️" },
-      { name: "Health & Claims", path: "/client/health-claims", icon: "💚" },
+      { name: "Reports & Claims", path: "/client/reports-claims", icon: "📋" },
       { name: "Profile", path: "/client/profile", icon: "👤" },
     ],
     doctor: [
@@ -36,62 +36,69 @@ const App = () => {
     },
   };
 
+  // Hide navigation on landing page
+  const isLandingPage = location.pathname === "/";
+
   return (
     <AppointmentProvider>
       <NotificationContext.Provider value={notificationContextValue}>
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30">
-          <nav className="bg-white/80 backdrop-blur-lg fixed w-full z-50 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="flex justify-between h-16">
-                <div className="flex">
-                  <Link
-                    to="/"
-                    className="flex items-center space-x-3 px-2 hover:opacity-80 transition-opacity"
-                  >
-                    <span className="text-2xl">🏥</span>
-                    <span className="gradient-text text-xl font-bold">
-                      MediElite
-                    </span>
-                  </Link>
-                  <div className="hidden md:ml-8 md:flex md:space-x-2">
-                    {navigation[userRole].map((item) => (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className={`nav-link flex items-center space-x-2 ${
-                          location.pathname === item.path ? "active" : ""
-                        }`}
-                      >
-                        <span className="text-xl">{item.icon}</span>
-                        <span>{item.name}</span>
-                      </Link>
-                    ))}
+          {!isLandingPage && (
+            <nav className="bg-white/80 backdrop-blur-lg fixed w-full z-50 border-b border-gray-100">
+              <div className="max-w-7xl mx-auto px-4">
+                <div className="flex justify-between h-16">
+                  <div className="flex">
+                    <Link
+                      to="/"
+                      className="flex items-center space-x-3 px-2 hover:opacity-80 transition-opacity"
+                    >
+                      <span className="text-2xl">🏥</span>
+                      <span className="gradient-text text-xl font-bold">
+                        MediElite
+                      </span>
+                    </Link>
+                    <div className="hidden md:ml-8 md:flex md:space-x-2">
+                      {navigation[userRole].map((item) => (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          className={`nav-link flex items-center space-x-2 ${
+                            location.pathname === item.path ? "active" : ""
+                          }`}
+                        >
+                          <span className="text-xl">{item.icon}</span>
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </nav>
+            </nav>
+          )}
 
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 z-50">
-            <div className="grid grid-cols-4 gap-1 p-2">
-              {navigation[userRole].map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex flex-col items-center justify-center p-2 rounded-xl ${
-                    location.pathname === item.path
-                      ? "gradient-text bg-emerald-50"
-                      : "text-gray-600 hover:text-emerald-600 hover:bg-gray-50"
-                  } transition-all duration-300`}
-                >
-                  <span className="text-xl mb-1">{item.icon}</span>
-                  <span className="text-xs">{item.name}</span>
-                </Link>
-              ))}
+          {!isLandingPage && (
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 z-50">
+              <div className="grid grid-cols-4 gap-1 p-2">
+                {navigation[userRole].map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex flex-col items-center justify-center p-2 rounded-xl ${
+                      location.pathname === item.path
+                        ? "gradient-text bg-emerald-50"
+                        : "text-gray-600 hover:text-emerald-600 hover:bg-gray-50"
+                    } transition-all duration-300`}
+                  >
+                    <span className="text-xl mb-1">{item.icon}</span>
+                    <span className="text-xs">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <main className="pt-16 pb-16 md:pb-0">
+          <main className={isLandingPage ? "" : "pt-16 pb-16 md:pb-0"}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

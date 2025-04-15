@@ -1,19 +1,22 @@
 // src/routes.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 import Dashboard from "./pages/Dashboard";
 import ClientProfile from "./pages/ClientProfile";
 import DoctorDirectory from "./pages/DoctorDirectory";
 import AppointmentPage from "./pages/AppointmentPage";
-import DoctorDashboard from "./pages/DoctorDashboard";
-import HealthAndClaims from "./pages/HealthAndClaims";
+import ReportsAndClaims from "./pages/ReportsAndClaims";
 
 const AppRoutes = ({ userRole }) => {
   return (
     <Routes>
-      {/* Default route */}
+      {/* Landing Page */}
+      <Route path="/" element={<HomePage />} />
+
+      {/* Default route - now points to home page */}
       <Route
-        path="/"
+        path="/default"
         element={
           <Navigate
             to={
@@ -28,10 +31,10 @@ const AppRoutes = ({ userRole }) => {
       <Route path="/client/dashboard" element={<Dashboard />} />
       <Route path="/client/profile" element={<ClientProfile />} />
       <Route path="/client/find-doctor" element={<DoctorDirectory />} />
-      <Route path="/client/health-claims" element={<HealthAndClaims />} />
+      <Route path="/client/reports-claims" element={<ReportsAndClaims />} />
 
       {/* Doctor Routes */}
-      <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+
       <Route path="/doctor/appointments" element={<AppointmentPage />} />
       <Route path="/doctor/patients" element={<ClientProfile />} />
 
