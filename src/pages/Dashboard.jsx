@@ -227,51 +227,241 @@ const Dashboard = () => {
             <VitalsChart />
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <a href="#vitals-chart">
-              <motion.div
-                whileHover={{ scale: 1.03, y: -5 }}
-                whileTap={{ scale: 0.98 }}
-                className="card relative overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-500 p-8 text-center"
+          {/* Quick Actions - Replaced with more useful healthcare information cards */}
+          <div className="card p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Medical Summary
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Insurance Claims Card */}
+              <Link to="/client/reports-claims" state={{ activeTab: "claims" }}>
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="card relative overflow-hidden bg-gradient-to-br from-blue-400 to-sky-500 p-6 h-full"
+                >
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white drop-shadow-md">
+                        Insurance Claims
+                      </h3>
+                      <p className="text-blue-100 text-sm mt-1 mb-4">
+                        2 pending claims
+                      </p>
+
+                      <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
+                        <div className="flex items-center">
+                          <span className="text-2xl mr-3">🧾</span>
+                          <div>
+                            <p className="text-white font-medium">
+                              Claim #CLM-85142
+                            </p>
+                            <p className="text-blue-100 text-xs">
+                              $420.50 • Pending Review
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
+                        <span>View or File a Claim</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              {/* Medical Bills Card */}
+              <Link to="/client/reports-claims" state={{ activeTab: "bills" }}>
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="card relative overflow-hidden bg-gradient-to-br from-rose-400 to-red-500 p-6 h-full"
+                >
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white drop-shadow-md">
+                        Medical Bills
+                      </h3>
+                      <p className="text-rose-100 text-sm mt-1 mb-4">
+                        1 bill due this week
+                      </p>
+
+                      <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
+                        <div className="flex items-center">
+                          <span className="text-2xl mr-3">💳</span>
+                          <div>
+                            <p className="text-white font-medium">
+                              City Hospital
+                            </p>
+                            <p className="text-rose-100 text-xs">
+                              $125.00 • Due Apr 20
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
+                        <span>Manage Bills</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              {/* Prescriptions Card */}
+              <Link
+                to="/client/reports-claims"
+                state={{ activeTab: "prescriptions", scrollToTop: true }}
               >
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-emerald-300 to-emerald-400 opacity-20 rounded-full -translate-y-10 translate-x-10"></div>
-                <div className="absolute bottom-0 left-0 w-16 h-16 bg-teal-300 opacity-20 rounded-full translate-y-8 -translate-x-8"></div>
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="card relative overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-500 p-6 h-full"
+                >
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
 
-                <div className="bg-white/20 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center backdrop-blur-sm">
-                  <span className="text-4xl">📊</span>
-                </div>
-                <h3 className="text-xl font-semibold text-white drop-shadow-md">
-                  Track Health
-                </h3>
-                <p className="text-emerald-100 text-sm mt-2">
-                  View your health metrics and vitals
-                </p>
-              </motion.div>
-            </a>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white drop-shadow-md">
+                        Prescriptions
+                      </h3>
+                      <p className="text-emerald-100 text-sm mt-1 mb-4">
+                        3 active medications
+                      </p>
 
-            <Link to="/client/profile" state={{ scrollToTop: true }}>
-              <motion.div
-                whileHover={{ scale: 1.03, y: -5 }}
-                whileTap={{ scale: 0.98 }}
-                className="card relative overflow-hidden bg-gradient-to-br from-violet-400 to-purple-500 p-8 text-center"
+                      <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
+                        <div className="flex items-center">
+                          <span className="text-2xl mr-3">💊</span>
+                          <div>
+                            <p className="text-white font-medium">
+                              Amoxicillin
+                            </p>
+                            <p className="text-emerald-100 text-xs">
+                              500mg • Once daily
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
+                        <span>View All Medications</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              {/* Medical Reports Card */}
+              <Link
+                to="/client/reports-claims"
+                state={{ activeTab: "reports" }}
               >
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-violet-300 to-violet-400 opacity-20 rounded-full -translate-y-10 translate-x-10"></div>
-                <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-300 opacity-20 rounded-full translate-y-8 -translate-x-8"></div>
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="card relative overflow-hidden bg-gradient-to-br from-violet-400 to-purple-500 p-6 h-full"
+                >
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
 
-                <div className="bg-white/20 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center backdrop-blur-sm">
-                  <span className="text-4xl">👤</span>
-                </div>
-                <h3 className="text-xl font-semibold text-white drop-shadow-md">
-                  View Profile
-                </h3>
-                <p className="text-purple-100 text-sm mt-2">
-                  Manage your personal information
-                </p>
-              </motion.div>
-            </Link>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white drop-shadow-md">
+                        Medical Reports
+                      </h3>
+                      <p className="text-purple-100 text-sm mt-1 mb-4">
+                        2 new test results available
+                      </p>
+
+                      <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
+                        <div className="flex items-center">
+                          <span className="text-2xl mr-3">📄</span>
+                          <div>
+                            <p className="text-white font-medium">Blood Test</p>
+                            <p className="text-purple-100 text-xs">
+                              Complete CBC • Apr 12
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
+                        <span>View All Reports</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>

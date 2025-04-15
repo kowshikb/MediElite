@@ -169,7 +169,7 @@ const DoctorDirectory = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={resetFilters}
-            className="btn-secondary"
+            className="px-3 py-1 text-sm font-medium rounded-md bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
           >
             Reset Filters
           </motion.button>
