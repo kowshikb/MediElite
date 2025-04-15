@@ -17,12 +17,12 @@ const NewClaimForm = ({ onClose, onSubmit }) => {
 
   // Allowed file types
   const allowedTypes = [
-    'application/pdf',
-    'image/jpeg',
-    'image/png',
-    'image/heic',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "image/heic",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ];
 
   // Maximum file size (10MB in bytes)
@@ -132,7 +132,10 @@ const NewClaimForm = ({ onClose, onSubmit }) => {
         <h3 className="text-xl font-bold text-emerald-900 mb-4">
           File New Insurance Claim
         </h3>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Patient Name <span className="text-red-500">*</span>
@@ -212,8 +215,12 @@ const NewClaimForm = ({ onClose, onSubmit }) => {
             </label>
             <div
               className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all
-                ${isDragging ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 hover:border-emerald-500'}
-                ${fileError ? 'border-red-300 bg-red-50' : ''}`}
+                ${
+                  isDragging
+                    ? "border-emerald-500 bg-emerald-50"
+                    : "border-gray-300 hover:border-emerald-500"
+                }
+                ${fileError ? "border-red-300 bg-red-50" : ""}`}
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
               onDragOver={handleDragOver}
@@ -255,7 +262,7 @@ const NewClaimForm = ({ onClose, onSubmit }) => {
               <p className="text-red-500 text-xs mt-1">{error}</p>
             </div>
           )}
-          
+
           <div className="md:col-span-2 flex justify-end space-x-3 mt-6">
             <button
               type="button"

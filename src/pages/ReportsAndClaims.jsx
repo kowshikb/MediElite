@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import medicalBillsData from "../data/medicalBills";
 import prescriptionsData from "../data/prescriptions";
 import medicalHistoryData from "../data/medicalHistory";
@@ -46,6 +47,14 @@ const FlyAwayText = ({ text, position }) => (
     </motion.div>
   </div>
 );
+
+// Generic Modal Auto-Close Hook
+const useAutoClose = (onClose, duration = 5000) => {
+  React.useEffect(() => {
+    const timer = setTimeout(onClose, duration);
+    return () => clearTimeout(timer);
+  }, [onClose, duration]);
+};
 
 // Status Badge Component
 const StatusBadge = ({ status }) => {
@@ -98,6 +107,9 @@ const StatusBadge = ({ status }) => {
 
 // Toast notification component
 const Toast = ({ message, type, onClose }) => {
+  // Use the generic auto-close hook
+  useAutoClose(onClose);
+
   const styles =
     type === "success"
       ? {
@@ -114,12 +126,6 @@ const Toast = ({ message, type, onClose }) => {
         };
 
   const icon = type === "success" ? "✓" : "✕";
-
-  // Automatically close toast after 5 seconds
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
 
   return (
     <motion.div
@@ -159,91 +165,95 @@ const Toast = ({ message, type, onClose }) => {
   );
 };
 
-// Bill Details Modal Component
-const BillDetailsModal = ({ bill, onClose }) => {
-  // Auto-close after 5 seconds
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
+// Modal Layout Component to standardize modal structure
+const ModalLayout = ({ title, children, onClose, subTitle }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-center justify-center p-4 overflow-hidden"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
+        className="bg-white rounded-xl shadow-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="border-b border-gray-100 pb-4 mb-4">
-          <h3 className="text-xl font-bold text-emerald-900">Bill Details</h3>
+          <h3 className="text-xl font-bold text-emerald-900">{title}</h3>
+          {subTitle && <p className="text-sm text-gray-500 mt-1">{subTitle}</p>}
         </div>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Provider</p>
-              <p className="font-medium text-gray-900">{bill.provider}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Service Date</p>
-              <p className="font-medium text-gray-900">
-                {new Date(bill.date).toLocaleDateString()}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Service</p>
-              <p className="font-medium text-gray-900">{bill.service}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Amount</p>
-              <p className="font-medium text-gray-900">
-                ${bill.amount.toFixed(2)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Status</p>
-              <div className="mt-1">
-                <StatusBadge status={bill.status} />
-              </div>
-            </div>
-          </div>
-        </div>
+        {children}
       </motion.div>
     </motion.div>
   );
 };
 
-// Claim Details Modal Component
-const ClaimDetailsModal = ({ claim, onClose }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center overflow-auto"
-    onClick={onClose}
-  >
-    <motion.div
-      initial={{ scale: 0.9, y: 20 }}
-      animate={{ scale: 1, y: 0 }}
-      exit={{ scale: 0.9, y: 20 }}
-      className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="border-b border-gray-100 pb-4 mb-4">
-        <h3 className="text-xl font-bold text-emerald-900">Claim Details</h3>
-        <p className="text-sm text-gray-500 mt-1">
-          Tap anywhere outside to close
-        </p>
-      </div>
+// EmptyState component to standardize empty state displays
+const EmptyState = ({ icon, title, description }) => (
+  <div className="p-12 text-center">
+    <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
+      <div className="text-3xl">{icon}</div>
+    </div>
+    <p className="text-lg font-medium text-gray-700 mb-2">{title}</p>
+    <p className="text-gray-500">{description}</p>
+  </div>
+);
 
+// Date formatter utility
+const formatDate = (dateString) => new Date(dateString).toLocaleDateString();
+
+// Bill Details Modal Component
+const BillDetailsModal = ({ bill, onClose }) => {
+  useAutoClose(onClose);
+
+  return (
+    <ModalLayout title="Bill Details" onClose={onClose}>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-500">Provider</p>
+            <p className="font-medium text-gray-900">{bill.provider}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Service Date</p>
+            <p className="font-medium text-gray-900">{formatDate(bill.date)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Service</p>
+            <p className="font-medium text-gray-900">{bill.service}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Amount</p>
+            <p className="font-medium text-gray-900">
+              ${bill.amount.toFixed(2)}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Status</p>
+            <div className="mt-1">
+              <StatusBadge status={bill.status} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </ModalLayout>
+  );
+};
+
+// Claim Details Modal Component
+const ClaimDetailsModal = ({ claim, onClose }) => {
+  useAutoClose(onClose);
+
+  return (
+    <ModalLayout
+      title="Claim Details"
+      subTitle="Tap anywhere outside to close"
+      onClose={onClose}
+    >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -253,7 +263,7 @@ const ClaimDetailsModal = ({ claim, onClose }) => (
           <div>
             <p className="text-sm text-gray-500">Date Submitted</p>
             <p className="font-medium text-gray-900">
-              {new Date(claim.dateSubmitted).toLocaleDateString()}
+              {formatDate(claim.dateSubmitted)}
             </p>
           </div>
           <div>
@@ -275,116 +285,366 @@ const ClaimDetailsModal = ({ claim, onClose }) => (
           <div>
             <p className="text-sm text-gray-500">Payment Date</p>
             <p className="font-medium text-gray-900">
-              {claim.paymentDate
-                ? new Date(claim.paymentDate).toLocaleDateString()
-                : "-"}
+              {claim.paymentDate ? formatDate(claim.paymentDate) : "-"}
             </p>
           </div>
         </div>
       </div>
-    </motion.div>
-  </motion.div>
-);
+    </ModalLayout>
+  );
+};
 
 // Medical Records Modal Component
 const MedicalRecordsModal = ({ record, onClose }) => {
-  // Auto-close after 5 seconds
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  return (
+    <ModalLayout title="Medical Records" onClose={onClose}>
+      <div className="space-y-6">
+        <div>
+          <h4 className="font-semibold text-gray-900 mb-2">
+            {record.condition}
+          </h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-500">Diagnosed Date</p>
+              <p className="font-medium text-gray-900">
+                {formatDate(record.diagnosedDate)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Treated By</p>
+              <p className="font-medium text-gray-900">{record.treatedBy}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Status</p>
+              <div className="mt-1">
+                <StatusBadge status={record.status} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-4">
+          <p className="text-sm text-gray-500 mb-2">Treatment Notes</p>
+          <p className="text-gray-700">{record.notes}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500 mb-2">Treatment Timeline</p>
+          <div className="space-y-3">
+            {[
+              {
+                date: record.diagnosedDate,
+                event: "Initial Diagnosis",
+                details: `Diagnosed by ${record.treatedBy}`,
+              },
+              {
+                date: new Date(
+                  new Date(record.diagnosedDate).getTime() +
+                    7 * 24 * 60 * 60 * 1000
+                ).toISOString(),
+                event: "Follow-up Appointment",
+                details: "Reviewed treatment progress",
+              },
+              {
+                date: new Date(
+                  new Date(record.diagnosedDate).getTime() +
+                    30 * 24 * 60 * 60 * 1000
+                ).toISOString(),
+                event: "Treatment Review",
+                details: "Assessed condition management",
+              },
+            ].map((item, index) => (
+              <div key={index} className="flex items-start">
+                <div className="h-2 w-2 mt-2 rounded-full bg-emerald-500 mr-3"></div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">
+                    {formatDate(item.date)} - {item.event}
+                  </p>
+                  <p className="text-sm text-gray-600">{item.details}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </ModalLayout>
+  );
+};
+
+// Enhanced Report Viewer Modal with visual content based on report type
+const ReportViewerModal = ({ report, onClose }) => {
+  const getReportContent = () => {
+    switch (report.reportType.toLowerCase()) {
+      case "ecg":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">ECG Results</h4>
+            <img
+              src={getReportImage("ecg")}
+              alt="ECG"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Heart Rate</p>
+                <p className="font-medium">72 BPM</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">QRS Duration</p>
+                <p className="font-medium">0.08s</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">PR Interval</p>
+                <p className="font-medium">0.16s</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">QT Interval</p>
+                <p className="font-medium">0.42s</p>
+              </div>
+            </div>
+          </div>
+        );
+      case "x-ray":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">X-Ray Results</h4>
+            <img
+              src={getReportImage("x-ray")}
+              alt="X-Ray"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <p className="text-sm text-gray-700">
+              <strong>Finding:</strong> No fractures or abnormalities detected.
+              Bone structure and alignment appear normal.
+            </p>
+          </div>
+        );
+      case "mri":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">MRI Results</h4>
+            <img
+              src={getReportImage("mri")}
+              alt="MRI"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <p className="text-sm text-gray-700">
+              <strong>Finding:</strong> No evidence of structural abnormalities.
+              Tissue appears healthy with no signs of inflammation or damage.
+            </p>
+          </div>
+        );
+      case "blood test":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">Blood Test Results</h4>
+            <img
+              src={getReportImage("blood test")}
+              alt="Blood Test"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-3 py-2 text-left">Test</th>
+                  <th className="px-3 py-2 text-left">Result</th>
+                  <th className="px-3 py-2 text-left">Normal Range</th>
+                  <th className="px-3 py-2 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="px-3 py-2 border-t">Hemoglobin</td>
+                  <td className="px-3 py-2 border-t">14.2 g/dL</td>
+                  <td className="px-3 py-2 border-t">13.5-17.5 g/dL</td>
+                  <td className="px-3 py-2 border-t text-green-600">Normal</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border-t">WBC</td>
+                  <td className="px-3 py-2 border-t">7.5 x10^9/L</td>
+                  <td className="px-3 py-2 border-t">4.5-11.0 x10^9/L</td>
+                  <td className="px-3 py-2 border-t text-green-600">Normal</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border-t">Platelets</td>
+                  <td className="px-3 py-2 border-t">250 x10^9/L</td>
+                  <td className="px-3 py-2 border-t">150-450 x10^9/L</td>
+                  <td className="px-3 py-2 border-t text-green-600">Normal</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 border-t">Glucose</td>
+                  <td className="px-3 py-2 border-t">95 mg/dL</td>
+                  <td className="px-3 py-2 border-t">70-100 mg/dL</td>
+                  <td className="px-3 py-2 border-t text-green-600">Normal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        );
+      case "ct scan":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">CT Scan Results</h4>
+            <img
+              src={getReportImage("ct scan")}
+              alt="CT Scan"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <p className="text-sm text-gray-700">
+              <strong>Finding:</strong> No evidence of abnormal masses or
+              structures. All organs appear normal in size and density.
+            </p>
+          </div>
+        );
+      case "ultrasound":
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">Ultrasound Results</h4>
+            <img
+              src={getReportImage("ultrasound")}
+              alt="Ultrasound"
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <p className="text-sm text-gray-700">
+              <strong>Finding:</strong> Normal examination with no visible
+              abnormalities. Tissues and structures appear within normal limits.
+            </p>
+          </div>
+        );
+      default:
+        return (
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="text-lg font-semibold mb-3">
+              {report.reportType} Results
+            </h4>
+            <img
+              src={getReportImage("default")}
+              alt={report.reportType}
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <p className="text-sm text-gray-700">
+              Report details will be available once reviewed by your doctor.
+            </p>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <ModalLayout
+      title={`${report.reportType} Report`}
+      subTitle="Tap anywhere outside to close"
+      onClose={onClose}
+    >
+      {getReportContent()}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
+        <div>
+          <p className="text-xs text-gray-500">Report Center</p>
+          <p className="font-medium text-gray-800">{report.reportCenterName}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500">Date</p>
+          <p className="font-medium text-gray-800">
+            {formatDate(report.reportDate)}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500">Doctor</p>
+          <p className="font-medium text-gray-800">{report.doctorName}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500">Status</p>
+          <div className="mt-1">
+            <StatusBadge status={report.status} />
+          </div>
+        </div>
+        <div>
+          <p className="text-xs text-gray-500">Report ID</p>
+          <p className="font-medium text-gray-800">
+            RPT-{report.id.toString().padStart(6, "0")}
+          </p>
+        </div>
+      </div>
+    </ModalLayout>
+  );
+};
+
+// Medical History Section Component
+const HistorySection = ({ history, setViewingRecord }) => {
+  const [viewingRecord, setViewingRecordState] = useState(null);
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
-      onClick={onClose}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="card overflow-hidden"
     >
-      <motion.div
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl shadow-xl p-6 max-w-2xl w-full mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="border-b border-gray-100 pb-4 mb-4">
-          <h3 className="text-xl font-bold text-emerald-900">
-            Medical Records
-          </h3>
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">Medical History</h2>
         </div>
+      </div>
 
-        <div className="space-y-6">
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-2">
-              {record.condition}
-            </h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Diagnosed Date</p>
-                <p className="font-medium text-gray-900">
-                  {new Date(record.diagnosedDate).toLocaleDateString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Treated By</p>
-                <p className="font-medium text-gray-900">{record.treatedBy}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Status</p>
-                <div className="mt-1">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Condition
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Diagnosed Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Doctor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {history.map((record) => (
+              <tr
+                key={record.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4 text-sm font-medium text-gray-800">
+                  {record.condition}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {formatDate(record.diagnosedDate)}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {record.treatedBy}
+                </td>
+                <td className="px-6 py-4 text-sm">
                   <StatusBadge status={record.status} />
-                </div>
-              </div>
-            </div>
-          </div>
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <button
+                    onClick={() => setViewingRecord(record)}
+                    className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <p className="text-sm text-gray-500 mb-2">Treatment Notes</p>
-            <p className="text-gray-700">{record.notes}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500 mb-2">Treatment Timeline</p>
-            <div className="space-y-3">
-              {[
-                {
-                  date: record.diagnosedDate,
-                  event: "Initial Diagnosis",
-                  details: `Diagnosed by ${record.treatedBy}`,
-                },
-                {
-                  date: new Date(
-                    new Date(record.diagnosedDate).getTime() +
-                      7 * 24 * 60 * 60 * 1000
-                  ).toISOString(),
-                  event: "Follow-up Appointment",
-                  details: "Reviewed treatment progress",
-                },
-                {
-                  date: new Date(
-                    new Date(record.diagnosedDate).getTime() +
-                      30 * 24 * 60 * 60 * 1000
-                  ).toISOString(),
-                  event: "Treatment Review",
-                  details: "Assessed condition management",
-                },
-              ].map((item, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="h-2 w-2 mt-2 rounded-full bg-emerald-500 mr-3"></div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {new Date(item.date).toLocaleDateString()} - {item.event}
-                    </p>
-                    <p className="text-sm text-gray-600">{item.details}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
+      {history.length === 0 && (
+        <EmptyState
+          icon="📋"
+          title="No Medical History"
+          description="Your medical history records will appear here."
+        />
+      )}
     </motion.div>
   );
 };
@@ -458,7 +718,7 @@ const PrescriptionsSection = ({ prescriptions, onRefillRequest }) => {
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
                   Prescribed by {prescription.prescribedBy} on{" "}
-                  {new Date(prescription.date).toLocaleDateString()}
+                  {formatDate(prescription.date)}
                 </p>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
                   <div>
@@ -511,19 +771,15 @@ const PrescriptionsSection = ({ prescriptions, onRefillRequest }) => {
           </div>
         ))}
         {filteredPrescriptions.length === 0 && (
-          <div className="p-12 text-center">
-            <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-              <div className="text-3xl">💊</div>
-            </div>
-            <p className="text-lg font-medium text-gray-700 mb-2">
-              No {activeTab === "ongoing" ? "Ongoing" : "Expired"} Prescriptions
-            </p>
-            <p className="text-gray-500">
-              You don't have any{" "}
-              {activeTab === "ongoing" ? "ongoing" : "expired"} prescriptions at
-              the moment.
-            </p>
-          </div>
+          <EmptyState
+            icon="💊"
+            title={`No ${
+              activeTab === "ongoing" ? "Ongoing" : "Expired"
+            } Prescriptions`}
+            description={`You don't have any ${
+              activeTab === "ongoing" ? "ongoing" : "expired"
+            } prescriptions at the moment.`}
+          />
         )}
       </div>
     </motion.div>
@@ -535,15 +791,15 @@ const BillsSection = ({ bills, onPayBill, onViewBill }) => {
   const [activeFilter, setActiveFilter] = useState("all");
 
   const FilterButton = ({ label, isActive, onClick }) => {
-    let bgColor = "bg-gray-100 text-gray-800";
-    if (label.toLowerCase() === "pending")
-      bgColor = "bg-yellow-100 text-yellow-800";
-    if (label.toLowerCase() === "paid") bgColor = "bg-green-100 text-green-800";
-
     return (
       <button
         onClick={onClick}
-        className={`px-4 py-2 rounded-lg font-medium border text-sm focus:outline-none ${bgColor}`}
+        className={`px-3 py-1.5 text-sm font-medium rounded-full shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 ${
+          isActive
+            ? "bg-gradient-to-r from-emerald-400 to-teal-500 text-white"
+            : "bg-gray-100 text-gray-600"
+        }`}
+        style={{ boxShadow: "none" }}
       >
         {label}
       </button>
@@ -605,7 +861,7 @@ const BillsSection = ({ bills, onPayBill, onViewBill }) => {
             {filteredBills.map((bill) => (
               <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4 text-sm text-gray-700">
-                  {new Date(bill.date).toLocaleDateString()}
+                  {formatDate(bill.date)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-700 font-medium">
                   {bill.provider}
@@ -645,104 +901,79 @@ const BillsSection = ({ bills, onPayBill, onViewBill }) => {
       </div>
 
       {filteredBills.length === 0 && (
-        <div className="p-12 text-center">
-          <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-            <div className="text-3xl">📄</div>
-          </div>
-          <p className="text-lg font-medium text-gray-700 mb-2">
-            No {activeFilter === "all" ? "Medical Bills" : activeFilter} Bills
-          </p>
-          <p className="text-gray-500">
-            You don't have any {activeFilter} medical bills at the moment.
-          </p>
-        </div>
+        <EmptyState
+          icon="📄"
+          title={`No ${
+            activeFilter === "all" ? "Medical Bills" : activeFilter
+          } Bills`}
+          description={`You don't have any ${activeFilter} medical bills at the moment.`}
+        />
       )}
     </motion.div>
   );
 };
 
-// Medical History Section with fixed alignment
-const HistorySection = ({ history }) => {
-  const [viewingRecord, setViewingRecord] = useState(null);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="card overflow-hidden"
-    >
-      {/* Medical Records Modal */}
-      <AnimatePresence>
-        {viewingRecord && (
-          <MedicalRecordsModal
-            record={viewingRecord}
-            onClose={() => setViewingRecord(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">Medical History</h2>
-        </div>
-      </div>
-
-      <div className="grid gap-4 p-6">
-        {history.map((record) => (
-          <div
-            key={record.id}
-            className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
-          >
-            <div className="flex justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-1">
-                  {record.condition}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Diagnosed on{" "}
-                  {new Date(record.diagnosedDate).toLocaleDateString()} by{" "}
-                  {record.treatedBy}
-                </p>
-              </div>
-              <StatusBadge status={record.status} />
-            </div>
-
-            <div className="flex justify-between items-start">
-              <div className="flex-grow">
-                <span className="text-xs text-gray-500 block mb-1">Notes</span>
-                <p className="font-medium text-gray-700">{record.notes}</p>
-              </div>
-              <button
-                onClick={() => setViewingRecord(record)}
-                className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover ml-4"
-              >
-                View Full Records
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {history.length === 0 && (
-        <div className="p-12 text-center">
-          <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-            <div className="text-3xl">📋</div>
-          </div>
-          <p className="text-lg font-medium text-gray-700 mb-2">
-            No Medical History
-          </p>
-          <p className="text-gray-500">
-            Your medical history records will appear here.
-          </p>
-        </div>
-      )}
-    </motion.div>
-  );
+// Get report image based on report type
+const getReportImage = (reportType) => {
+  switch (reportType.toLowerCase()) {
+    case "x-ray":
+      return "https://img.freepik.com/free-photo/female-chest-x-ray_1101-452.jpg";
+    case "ecg":
+      return "/src/data/ReportImages/Ecg.png";
+    case "mri":
+      return "/src/data/ReportImages/MRI.png";
+    case "blood test":
+      return "/src/data/ReportImages/BloodReport.png";
+    case "ct scan":
+      return "/src/data/ReportImages/CTScan.png";
+    case "ultrasound":
+      return "/src/data/ReportImages/Ultra.png";
+    default:
+      return "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80";
+  }
 };
 
-// Reports Section Component
-const ReportsSection = ({ reports }) => {
-  const [viewingReport, setViewingReport] = useState(null);
+// Reports Section Component with enhanced table layout and visual reports
+const ReportsSection = ({ reports, setViewingReport }) => {
+  // Calculate time to get report in a human-readable format
+  const getTimeToReceive = (reportType) => {
+    switch (reportType.toLowerCase()) {
+      case "x-ray":
+        return "1 day";
+      case "ecg":
+        return "1 hour";
+      case "mri":
+        return "3 days";
+      case "blood test":
+        return "2 days";
+      case "ct scan":
+        return "2 days";
+      case "ultrasound":
+        return "1 day";
+      default:
+        return "1-2 days";
+    }
+  };
+
+  // Get icon/emoji based on report type
+  const getReportIcon = (reportType) => {
+    switch (reportType.toLowerCase()) {
+      case "x-ray":
+        return "🦴";
+      case "ecg":
+        return "💓";
+      case "mri":
+        return "🧠";
+      case "blood test":
+        return "🩸";
+      case "ct scan":
+        return "🔬";
+      case "ultrasound":
+        return "🔊";
+      default:
+        return "📋";
+    }
+  };
 
   return (
     <motion.div
@@ -750,91 +981,90 @@ const ReportsSection = ({ reports }) => {
       animate={{ opacity: 1 }}
       className="card overflow-hidden"
     >
-      <AnimatePresence>
-        {viewingReport && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
-            onClick={() => setViewingReport(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="border-b border-gray-100 pb-4 mb-4">
-                <h3 className="text-xl font-bold text-emerald-900">
-                  {viewingReport.reportType} Report
-                </h3>
-              </div>
-              <div className="space-y-4">
-                <p>
-                  <strong>Report Center:</strong>{" "}
-                  {viewingReport.reportCenterName}
-                </p>
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(viewingReport.reportDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Doctor:</strong> {viewingReport.doctorName}
-                </p>
-                <p>
-                  <strong>Status:</strong> {viewingReport.status}
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="p-6 border-b border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800">Reports</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">Medical Reports</h2>
+        </div>
       </div>
 
-      <div className="grid gap-4 p-6">
-        {reports.map((report) => (
-          <div
-            key={report.id}
-            className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
-          >
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-gray-800">
-                  {report.reportType}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {new Date(report.reportDate).toLocaleDateString()} -{" "}
-                  {report.reportCenterName}
-                </p>
-              </div>
-              <button
-                onClick={() => setViewingReport(report)}
-                className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Test Type
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Doctor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Processing Time
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {reports.map((report) => (
+              <tr
+                key={report.id}
+                className="hover:bg-gray-50 transition-colors"
               >
-                View Report
-              </button>
-            </div>
-          </div>
-        ))}
-        {reports.length === 0 && (
-          <div className="p-12 text-center">
-            <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-              <div className="text-3xl">📄</div>
-            </div>
-            <p className="text-lg font-medium text-gray-700 mb-2">
-              No Reports Available
-            </p>
-            <p className="text-gray-500">
-              Your medical test reports will appear here.
-            </p>
-          </div>
-        )}
+                <td className="px-6 py-4">
+                  <div className="flex items-center">
+                    <span className="text-2xl mr-3">
+                      {getReportIcon(report.reportType)}
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">
+                        {report.reportType}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {report.reportCenterName}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {report.doctorName}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {formatDate(report.reportDate)}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <StatusBadge status={report.status} />
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {getTimeToReceive(report.reportType)}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <button
+                    onClick={() => setViewingReport(report)}
+                    className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
+                  >
+                    View Report
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
+      {reports.length === 0 && (
+        <EmptyState
+          icon="📄"
+          title="No Reports Available"
+          description="Your medical test reports will appear here."
+        />
+      )}
     </motion.div>
   );
 };
@@ -927,7 +1157,7 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
                   {claim.claimNumber}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-700">
-                  {new Date(claim.dateSubmitted).toLocaleDateString()}
+                  {formatDate(claim.dateSubmitted)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-700">
                   ${claim.amount.toFixed(2)}
@@ -939,9 +1169,7 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
                   {claim.coverage}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-700">
-                  {claim.paymentDate
-                    ? new Date(claim.paymentDate).toLocaleDateString()
-                    : "-"}
+                  {claim.paymentDate ? formatDate(claim.paymentDate) : "-"}
                 </td>
                 <td className="px-6 py-4 text-sm">
                   <button
@@ -958,27 +1186,78 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
       </div>
 
       {filteredClaims.length === 0 && (
-        <div className="p-12 text-center">
-          <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-            <div className="text-3xl">🧾</div>
-          </div>
-          <p className="text-lg font-medium text-gray-700 mb-2">
-            No {activeFilter === "All" ? "Insurance Claims" : activeFilter}{" "}
-            Claims
-          </p>
-          <p className="text-gray-500">
-            You don't have any {activeFilter} insurance claims at the moment.
-          </p>
-        </div>
+        <EmptyState
+          icon="🧾"
+          title={`No ${
+            activeFilter === "All" ? "Insurance Claims" : activeFilter
+          } Claims`}
+          description={`You don't have any ${activeFilter} insurance claims at the moment.`}
+        />
       )}
     </motion.div>
   );
 };
 
 const ReportsAndClaims = () => {
-  const [activeTab, setActiveTab] = useState("bills");
+  // Use location to get state passed from other components
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "bills"
+  );
   const [showNewClaimForm, setShowNewClaimForm] = useState(false);
   const [toast, setToast] = useState(null);
+
+  // Create refs for each section to enable scrolling to top
+  const prescriptionsRef = React.useRef(null);
+  const reportsRef = React.useRef(null);
+  const medicalHistoryRef = React.useRef(null);
+
+  // Set active tab from location state when it changes
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+
+      // Handle scroll to top if requested
+      if (location.state?.scrollToTop) {
+        setTimeout(() => {
+          // Scroll to the top of the page first
+          window.scrollTo(0, 0);
+
+          // Then after a small delay, scroll to the specific section if needed
+          setTimeout(() => {
+            if (
+              location.state.activeTab === "prescriptions" &&
+              prescriptionsRef.current
+            ) {
+              prescriptionsRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            } else if (
+              location.state.activeTab === "reports" &&
+              reportsRef.current
+            ) {
+              reportsRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            } else if (
+              location.state.activeTab === "history" &&
+              medicalHistoryRef.current
+            ) {
+              medicalHistoryRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }
+          }, 300);
+        }, 100);
+      }
+
+      // Clear the state to prevent it from persisting on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Add refill handler at the parent level
   const handleRefillRequest = (prescription) => {
@@ -1061,6 +1340,9 @@ const ReportsAndClaims = () => {
     setViewingBill(bill);
   };
 
+  const [viewingRecord, setViewingRecord] = useState(null);
+  const [viewingReport, setViewingReport] = useState(null);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -1088,6 +1370,26 @@ const ReportsAndClaims = () => {
         )}
       </AnimatePresence>
 
+      {/* Medical Records Modal */}
+      <AnimatePresence>
+        {viewingRecord && (
+          <MedicalRecordsModal
+            record={viewingRecord}
+            onClose={() => setViewingRecord(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Report Viewer Modal */}
+      <AnimatePresence>
+        {viewingReport && (
+          <ReportViewerModal
+            report={viewingReport}
+            onClose={() => setViewingReport(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* File New Claim Modal */}
       <AnimatePresence>
         {showNewClaimForm && (
@@ -1103,7 +1405,7 @@ const ReportsAndClaims = () => {
         <div className="relative z-10 flex justify-between items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
-              ReportsAndClaims{" "}
+              ReportsAndClaims
             </h1>
             <p className="text-blue-100 text-sm md:text-base mt-1">
               Manage your medical records, bills, prescriptions, and insurance
@@ -1169,13 +1471,22 @@ const ReportsAndClaims = () => {
           )}
 
           {activeTab === "prescriptions" && (
-            <PrescriptionsSection
-              prescriptions={prescriptions}
-              onRefillRequest={handleRefillRequest}
-            />
+            <div ref={prescriptionsRef}>
+              <PrescriptionsSection
+                prescriptions={prescriptions}
+                onRefillRequest={handleRefillRequest}
+              />
+            </div>
           )}
 
-          {activeTab === "history" && <HistorySection history={history} />}
+          {activeTab === "history" && (
+            <div ref={medicalHistoryRef}>
+              <HistorySection
+                history={history}
+                setViewingRecord={setViewingRecord}
+              />
+            </div>
+          )}
 
           {activeTab === "claims" && (
             <ClaimsSection
@@ -1184,7 +1495,14 @@ const ReportsAndClaims = () => {
             />
           )}
 
-          {activeTab === "reports" && <ReportsSection reports={reports} />}
+          {activeTab === "reports" && (
+            <div ref={reportsRef}>
+              <ReportsSection
+                reports={reports}
+                setViewingReport={setViewingReport}
+              />
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
