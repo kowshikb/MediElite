@@ -919,15 +919,15 @@ const getReportImage = (reportType) => {
     case "x-ray":
       return "https://img.freepik.com/free-photo/female-chest-x-ray_1101-452.jpg";
     case "ecg":
-      return "/src/data/ReportImages/Ecg.png";
+      return "/ReportImages/Ecg.png";
     case "mri":
-      return "/src/data/ReportImages/MRI.png";
+      return "/ReportImages/MRI.png";
     case "blood test":
-      return "/src/data/ReportImages/BloodReport.png";
+      return "/ReportImages/BloodReport.png";
     case "ct scan":
-      return "/src/data/ReportImages/CTScan.png";
+      return "/ReportImages/CTScan.png";
     case "ultrasound":
-      return "/src/data/ReportImages/Ultra.png";
+      return "/ReportImages/Ultra.png";
     default:
       return "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80";
   }
