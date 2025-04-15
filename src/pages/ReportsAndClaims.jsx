@@ -4,6 +4,7 @@ import medicalBillsData from "../data/medicalBills";
 import prescriptionsData from "../data/prescriptions";
 import medicalHistoryData from "../data/medicalHistory";
 import insuranceClaimsData from "../data/insuranceClaims";
+import reportsData from "../data/reports.json";
 import NewClaimForm from "../components/NewClaimForm";
 
 // SidebarTab component for navigation
@@ -50,37 +51,46 @@ const FlyAwayText = ({ text, position }) => (
 const StatusBadge = ({ status }) => {
   let colorClasses = "bg-gray-100 text-gray-800"; // Default styling
   let label = status;
+  let symbol = "";
 
   switch (status.toLowerCase()) {
     case "pending":
       colorClasses = "bg-yellow-100 text-yellow-800";
+      symbol = "⏳"; // Hourglass for pending
       break;
     case "approved":
     case "paid":
     case "completed":
       colorClasses = "bg-green-100 text-green-800";
+      symbol = "✅"; // Checkmark for approved/paid/completed
       break;
     case "denied":
     case "rejected":
       colorClasses = "bg-red-100 text-red-800";
+      symbol = "❌"; // Cross for denied/rejected
       break;
     case "ongoing":
       colorClasses = "bg-blue-100 text-blue-800";
+      symbol = "🔄"; // Circular arrow for ongoing
       break;
     case "resolved":
       colorClasses = "bg-green-100 text-green-800";
+      symbol = "✔️"; // Checkmark for resolved
       break;
     case "recurring":
       colorClasses = "bg-purple-100 text-purple-800";
+      symbol = "🔁"; // Repeat symbol for recurring
       break;
     default:
       colorClasses = "bg-gray-100 text-gray-800";
+      symbol = "❓"; // Question mark for unknown
   }
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClasses}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClasses}`}
     >
+      <span className="mr-1">{symbol}</span>
       {label}
     </span>
   );
@@ -212,77 +222,69 @@ const BillDetailsModal = ({ bill, onClose }) => {
 };
 
 // Claim Details Modal Component
-const ClaimDetailsModal = ({ claim, onClose }) => {
-  // Auto-close after 5 seconds
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
+const ClaimDetailsModal = ({ claim, onClose }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center overflow-auto"
+    onClick={onClose}
+  >
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
-      onClick={onClose}
+      initial={{ scale: 0.9, y: 20 }}
+      animate={{ scale: 1, y: 0 }}
+      exit={{ scale: 0.9, y: 20 }}
+      className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
+      onClick={(e) => e.stopPropagation()}
     >
-      <motion.div
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="border-b border-gray-100 pb-4 mb-4">
-          <h3 className="text-xl font-bold text-emerald-900">Claim Details</h3>
-          <p className="text-sm text-gray-500 mt-1">
-            Tap anywhere outside to close
-          </p>
-        </div>
+      <div className="border-b border-gray-100 pb-4 mb-4">
+        <h3 className="text-xl font-bold text-emerald-900">Claim Details</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          Tap anywhere outside to close
+        </p>
+      </div>
 
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Claim Number</p>
-              <p className="font-medium text-gray-900">{claim.claimNumber}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Date Submitted</p>
-              <p className="font-medium text-gray-900">
-                {new Date(claim.dateSubmitted).toLocaleDateString()}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Amount Claimed</p>
-              <p className="font-medium text-gray-900">
-                ${claim.amount.toFixed(2)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Status</p>
-              <div className="mt-1">
-                <StatusBadge status={claim.status} />
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Coverage</p>
-              <p className="font-medium text-gray-900">{claim.coverage}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Payment Date</p>
-              <p className="font-medium text-gray-900">
-                {claim.paymentDate
-                  ? new Date(claim.paymentDate).toLocaleDateString()
-                  : "-"}
-              </p>
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-500">Claim Number</p>
+            <p className="font-medium text-gray-900">{claim.claimNumber}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Date Submitted</p>
+            <p className="font-medium text-gray-900">
+              {new Date(claim.dateSubmitted).toLocaleDateString()}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Amount Claimed</p>
+            <p className="font-medium text-gray-900">
+              ${claim.amount.toFixed(2)}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Status</p>
+            <div className="mt-1">
+              <StatusBadge status={claim.status} />
             </div>
           </div>
+          <div>
+            <p className="text-sm text-gray-500">Coverage</p>
+            <p className="font-medium text-gray-900">{claim.coverage}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Payment Date</p>
+            <p className="font-medium text-gray-900">
+              {claim.paymentDate
+                ? new Date(claim.paymentDate).toLocaleDateString()
+                : "-"}
+            </p>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
-  );
-};
+  </motion.div>
+);
 
 // Medical Records Modal Component
 const MedicalRecordsModal = ({ record, onClose }) => {
@@ -390,14 +392,25 @@ const MedicalRecordsModal = ({ record, onClose }) => {
 // Prescriptions Section Component
 const PrescriptionsSection = ({ prescriptions, onRefillRequest }) => {
   const [refillRequested, setRefillRequested] = useState({});
+  const [activeTab, setActiveTab] = useState("ongoing");
 
   const handleRefillRequest = (prescription) => {
     setRefillRequested((prev) => ({
       ...prev,
       [prescription.id]: true,
     }));
+
+    // Increment the refills count
+    prescription.refills += 1;
+
     onRefillRequest(prescription);
   };
+
+  const filteredPrescriptions = prescriptions.filter((prescription) => {
+    if (activeTab === "ongoing") return !prescription.expired;
+    if (activeTab === "expired") return prescription.expired;
+    return true;
+  });
 
   return (
     <motion.div
@@ -407,194 +420,246 @@ const PrescriptionsSection = ({ prescriptions, onRefillRequest }) => {
     >
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">
-            Active Prescriptions
-          </h2>
+          <h2 className="text-xl font-bold text-gray-800">Prescriptions</h2>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setActiveTab("ongoing")}
+              className={`px-3 py-1.5 text-sm font-medium rounded-full shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-300 ${
+                activeTab === "ongoing"
+                  ? "bg-gradient-to-r from-emerald-400 to-teal-500 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Ongoing
+            </button>
+            <button
+              onClick={() => setActiveTab("expired")}
+              className={`px-3 py-1.5 text-sm font-medium rounded-full shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-300 ${
+                activeTab === "expired"
+                  ? "bg-gradient-to-r from-rose-400 to-red-500 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Expired
+            </button>
+          </div>
         </div>
       </div>
-      <>
-        <div className="grid gap-4 p-6">
-          {prescriptions.map((prescription) => (
-            <div
-              key={prescription.id}
-              className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-800">
-                    {prescription.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Prescribed by {prescription.prescribedBy} on{" "}
-                    {new Date(prescription.date).toLocaleDateString()}
-                  </p>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                    <div>
-                      <span className="text-xs text-gray-500 block">
-                        Dosage
-                      </span>
-                      <span className="font-medium text-gray-700">
-                        {prescription.dosage}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs text-gray-500 block">
-                        Frequency
-                      </span>
-                      <span className="font-medium text-gray-700">
-                        {prescription.frequency}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs text-gray-500 block">
-                        Duration
-                      </span>
-                      <span className="font-medium text-gray-700">
-                        {prescription.duration}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs text-gray-500 block">
-                        Refills
-                      </span>
-                      <span className="font-medium text-gray-700">
-                        {prescription.refills}
-                      </span>
-                    </div>
+      <div className="grid gap-4 p-6">
+        {filteredPrescriptions.map((prescription) => (
+          <div
+            key={prescription.id}
+            className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">
+                  {prescription.name}
+                </h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Prescribed by {prescription.prescribedBy} on{" "}
+                  {new Date(prescription.date).toLocaleDateString()}
+                </p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                  <div>
+                    <span className="text-xs text-gray-500 block">Dosage</span>
+                    <span className="font-medium text-gray-700">
+                      {prescription.dosage}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">
+                      Frequency
+                    </span>
+                    <span className="font-medium text-gray-700">
+                      {prescription.frequency}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">
+                      Duration
+                    </span>
+                    <span className="font-medium text-gray-700">
+                      {prescription.duration}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500 block">Refills</span>
+                    <span className="font-medium text-gray-700">
+                      {prescription.refills}
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end ml-4">
-                  {refillRequested[prescription.id] ? (
-                    <div className="px-4 py-2 bg-white text-emerald-600 rounded-lg border border-emerald-200 font-medium">
-                      Refill Requested
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => handleRefillRequest(prescription)}
-                      className="px-4 py-2 bg-white text-rose-600 rounded-lg border border-rose-200 font-medium transition-transform duration-300 transform active:scale-95 no-hover"
-                      style={{ boxShadow: "none" }}
-                    >
-                      Request Refill
-                    </button>
-                  )}
-                </div>
+              </div>
+              <div className="flex flex-col items-end ml-4">
+                {!prescription.expired && !refillRequested[prescription.id] && (
+                  <button
+                    onClick={() => handleRefillRequest(prescription)}
+                    className="px-4 py-2 bg-white text-rose-600 rounded-lg border border-rose-200 font-medium transition-transform duration-300 transform active:scale-95 no-hover"
+                    style={{ boxShadow: "none" }}
+                  >
+                    Request Refill
+                  </button>
+                )}
+                {refillRequested[prescription.id] && (
+                  <div className="px-4 py-2 bg-white text-emerald-600 rounded-lg border border-emerald-200 font-medium">
+                    Refill Requested
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-        {prescriptions.length === 0 && (
+          </div>
+        ))}
+        {filteredPrescriptions.length === 0 && (
           <div className="p-12 text-center">
             <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
               <div className="text-3xl">💊</div>
             </div>
             <p className="text-lg font-medium text-gray-700 mb-2">
-              No Active Prescriptions
+              No {activeTab === "ongoing" ? "Ongoing" : "Expired"} Prescriptions
             </p>
             <p className="text-gray-500">
-              You don't have any active prescriptions at the moment.
+              You don't have any{" "}
+              {activeTab === "ongoing" ? "ongoing" : "expired"} prescriptions at
+              the moment.
             </p>
           </div>
         )}
-      </>
+      </div>
     </motion.div>
   );
 };
 
-// Medical Bills Section with updated buttons based on status
-const BillsSection = ({ bills, onPayBill, onViewBill }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="card overflow-hidden"
-  >
-    <div className="p-6 border-b border-gray-100">
-      <div className="flex items-center">
-        <h2 className="text-xl font-bold text-gray-800">Medical Bills</h2>
+// Medical Bills Section with dynamic filters
+const BillsSection = ({ bills, onPayBill, onViewBill }) => {
+  const [activeFilter, setActiveFilter] = useState("all");
+
+  const FilterButton = ({ label, isActive, onClick }) => {
+    let bgColor = "bg-gray-100 text-gray-800";
+    if (label.toLowerCase() === "pending")
+      bgColor = "bg-yellow-100 text-yellow-800";
+    if (label.toLowerCase() === "paid") bgColor = "bg-green-100 text-green-800";
+
+    return (
+      <button
+        onClick={onClick}
+        className={`px-4 py-2 rounded-lg font-medium border text-sm focus:outline-none ${bgColor}`}
+      >
+        {label}
+      </button>
+    );
+  };
+
+  const filteredBills = bills.filter((bill) => {
+    if (activeFilter === "all") return true;
+    return bill.status.toLowerCase() === activeFilter;
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="card overflow-hidden"
+    >
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">Medical Bills</h2>
+          <div className="flex space-x-4">
+            {["All", "Pending", "Paid"].map((filter) => (
+              <FilterButton
+                key={filter}
+                label={filter}
+                isActive={activeFilter === filter.toLowerCase()}
+                onClick={() => setActiveFilter(filter.toLowerCase())}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Date
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Provider
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Service
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Amount
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {bills.map((bill) => (
-            <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4 text-sm text-gray-700">
-                {new Date(bill.date).toLocaleDateString()}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                {bill.provider}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-700">
-                {bill.service}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-700">
-                ${bill.amount.toFixed(2)}
-              </td>
-              <td className="px-6 py-4 text-sm">
-                <StatusBadge status={bill.status} />
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-700">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => onViewBill(bill)}
-                    className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
-                  >
-                    View
-                  </button>
-
-                  {bill.status.toLowerCase() === "pending" && (
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Provider
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Service
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Amount
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {filteredBills.map((bill) => (
+              <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {new Date(bill.date).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700 font-medium">
+                  {bill.provider}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  {bill.service}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  ${bill.amount.toFixed(2)}
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <StatusBadge status={bill.status} />
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-700">
+                  <div className="flex space-x-2">
                     <button
-                      onClick={() => onPayBill(bill)}
+                      onClick={() => onViewBill(bill)}
                       className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
                     >
-                      Pay
+                      View
                     </button>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
 
-    {bills.length === 0 && (
-      <div className="p-12 text-center">
-        <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
-          <div className="text-3xl">📄</div>
-        </div>
-        <p className="text-lg font-medium text-gray-700 mb-2">
-          No Medical Bills
-        </p>
-        <p className="text-gray-500">
-          You don't have any medical bills at the moment.
-        </p>
+                    {bill.status.toLowerCase() === "pending" && (
+                      <button
+                        onClick={() => onPayBill(bill)}
+                        className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
+                      >
+                        Pay
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    )}
-  </motion.div>
-);
+
+      {filteredBills.length === 0 && (
+        <div className="p-12 text-center">
+          <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
+            <div className="text-3xl">📄</div>
+          </div>
+          <p className="text-lg font-medium text-gray-700 mb-2">
+            No {activeFilter === "all" ? "Medical Bills" : activeFilter} Bills
+          </p>
+          <p className="text-gray-500">
+            You don't have any {activeFilter} medical bills at the moment.
+          </p>
+        </div>
+      )}
+    </motion.div>
+  );
+};
 
 // Medical History Section with fixed alignment
 const HistorySection = ({ history }) => {
@@ -675,9 +740,128 @@ const HistorySection = ({ history }) => {
   );
 };
 
-// Insurance Claims Section with file new claim button
+// Reports Section Component
+const ReportsSection = ({ reports }) => {
+  const [viewingReport, setViewingReport] = useState(null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1 }}
+      className="card overflow-hidden"
+    >
+      <AnimatePresence>
+        {viewingReport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
+            onClick={() => setViewingReport(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="border-b border-gray-100 pb-4 mb-4">
+                <h3 className="text-xl font-bold text-emerald-900">
+                  {viewingReport.reportType} Report
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <p>
+                  <strong>Report Center:</strong>{" "}
+                  {viewingReport.reportCenterName}
+                </p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(viewingReport.reportDate).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Doctor:</strong> {viewingReport.doctorName}
+                </p>
+                <p>
+                  <strong>Status:</strong> {viewingReport.status}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="p-6 border-b border-gray-100">
+        <h2 className="text-xl font-bold text-gray-800">Reports</h2>
+      </div>
+
+      <div className="grid gap-4 p-6">
+        {reports.map((report) => (
+          <div
+            key={report.id}
+            className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow"
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">
+                  {report.reportType}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {new Date(report.reportDate).toLocaleDateString()} -{" "}
+                  {report.reportCenterName}
+                </p>
+              </div>
+              <button
+                onClick={() => setViewingReport(report)}
+                className="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded-md text-sm font-medium no-hover"
+              >
+                View Report
+              </button>
+            </div>
+          </div>
+        ))}
+        {reports.length === 0 && (
+          <div className="p-12 text-center">
+            <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
+              <div className="text-3xl">📄</div>
+            </div>
+            <p className="text-lg font-medium text-gray-700 mb-2">
+              No Reports Available
+            </p>
+            <p className="text-gray-500">
+              Your medical test reports will appear here.
+            </p>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+// Revamp the Insurance Claims section for improved usability and visual appeal
 const ClaimsSection = ({ claims, onFileNewClaim }) => {
+  const [activeFilter, setActiveFilter] = useState("All");
   const [viewingClaim, setViewingClaim] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const filteredClaims = claims.filter((claim) => {
+    if (activeFilter === "All") return true;
+    return claim.status.toLowerCase() === activeFilter.toLowerCase();
+  });
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest("#menu-button")) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -698,13 +882,14 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-800">Insurance Claims</h2>
-          <button
-            onClick={onFileNewClaim}
-            className="px-4 py-2 bg-emerald-600 text-white rounded-lg flex items-center justify-center space-x-2 no-hover"
-          >
-            <span className="text-lg">+</span>
-            <span>File New Claim</span>
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={onFileNewClaim}
+              className="px-5 py-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-4 focus:ring-emerald-300"
+            >
+              + File New Claim
+            </button>
+          </div>
         </div>
       </div>
 
@@ -712,31 +897,31 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Claim #
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Date Submitted
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Amount
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Coverage
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Payment Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600">
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {claims.map((claim) => (
+            {filteredClaims.map((claim) => (
               <tr key={claim.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4 text-sm font-medium text-gray-700">
                   {claim.claimNumber}
@@ -772,16 +957,17 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
         </table>
       </div>
 
-      {claims.length === 0 && (
+      {filteredClaims.length === 0 && (
         <div className="p-12 text-center">
           <div className="inline-flex rounded-full bg-blue-50 p-4 mb-4">
             <div className="text-3xl">🧾</div>
           </div>
           <p className="text-lg font-medium text-gray-700 mb-2">
-            No Insurance Claims
+            No {activeFilter === "All" ? "Insurance Claims" : activeFilter}{" "}
+            Claims
           </p>
           <p className="text-gray-500">
-            You haven't filed any insurance claims yet.
+            You don't have any {activeFilter} insurance claims at the moment.
           </p>
         </div>
       )}
@@ -789,7 +975,7 @@ const ClaimsSection = ({ claims, onFileNewClaim }) => {
   );
 };
 
-const HealthAndClaims = () => {
+const ReportsAndClaims = () => {
   const [activeTab, setActiveTab] = useState("bills");
   const [showNewClaimForm, setShowNewClaimForm] = useState(false);
   const [toast, setToast] = useState(null);
@@ -798,7 +984,7 @@ const HealthAndClaims = () => {
   const handleRefillRequest = (prescription) => {
     setToast({
       message: `Refill request sent for ${prescription.name}! You will receive your medication in 30 minutes.`,
-      type: "success"
+      type: "success",
     });
   };
 
@@ -817,6 +1003,11 @@ const HealthAndClaims = () => {
   const [claims, setClaims] = useState(
     [...insuranceClaimsData].sort(
       (a, b) => new Date(b.dateSubmitted) - new Date(a.dateSubmitted)
+    )
+  );
+  const [reports] = useState(
+    [...reportsData].sort(
+      (a, b) => new Date(b.reportDate) - new Date(a.reportDate)
     )
   );
 
@@ -912,7 +1103,7 @@ const HealthAndClaims = () => {
         <div className="relative z-10 flex justify-between items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
-              Health & Claims
+              ReportsAndClaims{" "}
             </h1>
             <p className="text-blue-100 text-sm md:text-base mt-1">
               Manage your medical records, bills, prescriptions, and insurance
@@ -956,6 +1147,12 @@ const HealthAndClaims = () => {
                   icon="📝"
                   text="Insurance Claims"
                 />
+                <SidebarTab
+                  active={activeTab === "reports"}
+                  onClick={() => setActiveTab("reports")}
+                  icon="📄"
+                  text="Reports"
+                />
               </div>
             </div>
           </div>
@@ -972,9 +1169,9 @@ const HealthAndClaims = () => {
           )}
 
           {activeTab === "prescriptions" && (
-            <PrescriptionsSection 
+            <PrescriptionsSection
               prescriptions={prescriptions}
-              onRefillRequest={handleRefillRequest} 
+              onRefillRequest={handleRefillRequest}
             />
           )}
 
@@ -986,10 +1183,12 @@ const HealthAndClaims = () => {
               onFileNewClaim={() => setShowNewClaimForm(true)}
             />
           )}
+
+          {activeTab === "reports" && <ReportsSection reports={reports} />}
         </div>
       </div>
     </motion.div>
   );
 };
 
-export default HealthAndClaims;
+export default ReportsAndClaims;

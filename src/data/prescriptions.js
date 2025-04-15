@@ -59,6 +59,28 @@ const prescriptions = [
     duration: "30 days",
     refills: 2,
   },
+  {
+    id: 7,
+    name: "Paracetamol",
+    prescribedBy: "Dr. Alice Green",
+    date: "2024-12-01",
+    dosage: "500mg",
+    frequency: "Twice daily",
+    duration: "10 days",
+    refills: 2,
+    expired: true,
+  },
+  {
+    id: 8,
+    name: "Ciprofloxacin",
+    prescribedBy: "Dr. Robert White",
+    date: "2024-11-15",
+    dosage: "250mg",
+    frequency: "Twice daily",
+    duration: "7 days",
+    refills: 1,
+    expired: true,
+  },
 ];
 
 export default prescriptions;

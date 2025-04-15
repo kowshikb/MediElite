@@ -35,6 +35,24 @@ const insuranceClaims = [
     paymentDate: null,
     coverage: "Pending Review",
   },
+  {
+    id: 5,
+    claimNumber: "CLM-56789",
+    dateSubmitted: "2025-03-15",
+    amount: 200.0,
+    status: "denied",
+    paymentDate: null,
+    coverage: "None",
+  },
+  {
+    id: 6,
+    claimNumber: "CLM-96389",
+    dateSubmitted: "2024-12-25",
+    amount: 500.0,
+    status: "denied",
+    paymentDate: null,
+    coverage: "None",
+  },
 ];
 
 export default insuranceClaims;
