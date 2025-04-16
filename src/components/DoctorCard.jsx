@@ -267,7 +267,7 @@ const DoctorCard = ({ doctor }) => {
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setShowBookingModal(false)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-light focus:outline-none"
+                    className="text-rose-500 hover:text-white bg-rose-100 hover:bg-rose-500 transition-colors text-2xl font-light focus:outline-none rounded-full w-9 h-9 flex items-center justify-center shadow"
                   >
                     ×
                   </motion.button>
@@ -308,7 +308,7 @@ const DoctorCard = ({ doctor }) => {
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setShowChatModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-light focus:outline-none"
+                  className="text-rose-500 hover:text-white bg-rose-100 hover:bg-rose-500 transition-colors text-2xl font-light focus:outline-none rounded-full w-9 h-9 flex items-center justify-center shadow"
                 >
                   ×
                 </motion.button>

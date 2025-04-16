@@ -1412,6 +1412,20 @@ const ReportsAndClaims = () => {
               claims
             </p>
           </div>
+          <div className="flex gap-4">
+            <a
+              href="/client/support-feedback"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo(0, 0);
+                window.location.href = "/client/support-feedback";
+              }}
+              className="px-4 py-2 bg-white text-blue-600 font-medium rounded-lg shadow-md transition-transform duration-300 transform hover:scale-105 focus:outline-none"
+            >
+              <span className="text-lg">🧩 </span>
+              Support & Feedback
+            </a>
+          </div>
         </div>
         {/* Enhanced decorative elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>

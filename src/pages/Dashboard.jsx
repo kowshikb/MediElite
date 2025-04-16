@@ -208,6 +208,20 @@ const Dashboard = () => {
                   </div>
                 ))}
               </div>
+              {/* Support & Feedback button */}
+              <div className="mt-8 flex justify-end">
+                <Link
+                  to="/client/support-feedback"
+                  className="glass-card bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-3 hover:scale-105 hover:shadow-emerald-400/30 transition-all duration-300 text-base font-semibold border border-emerald-200/40 backdrop-blur-md"
+                  style={{ width: "100%", maxWidth: "100%", height: 44 }}
+                >
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-2xl shadow-md mr-1">
+                    🧩
+                  </span>
+                  <span>Support & Feedback</span>
+                  <span className="ml-1 text-lg">→</span>
+                </Link>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -359,7 +373,6 @@ const Dashboard = () => {
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
                   <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
-
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-xl font-semibold text-white drop-shadow-md">
@@ -368,7 +381,6 @@ const Dashboard = () => {
                       <p className="text-emerald-100 text-sm mt-1 mb-4">
                         3 active medications
                       </p>
-
                       <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
                         <div className="flex items-center">
                           <span className="text-2xl mr-3">💊</span>
@@ -382,7 +394,6 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </div>
-
                       <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
                         <span>View All Medications</span>
                         <svg
@@ -418,7 +429,6 @@ const Dashboard = () => {
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-y-10 translate-x-10"></div>
                   <div className="absolute bottom-0 left-0 w-16 h-16 bg-white opacity-10 rounded-full translate-y-8 -translate-x-8"></div>
-
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-xl font-semibold text-white drop-shadow-md">
@@ -427,7 +437,6 @@ const Dashboard = () => {
                       <p className="text-purple-100 text-sm mt-1 mb-4">
                         2 new test results available
                       </p>
-
                       <div className="bg-white/20 rounded-lg p-3 backdrop-blur-sm mb-3">
                         <div className="flex items-center">
                           <span className="text-2xl mr-3">📄</span>
@@ -439,7 +448,6 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </div>
-
                       <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm backdrop-blur-sm transition-colors flex items-center">
                         <span>View All Reports</span>
                         <svg

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AppRoutes from "./routes";
 import { NotificationContext } from "./components/AppointmentCalendar";
 import { AppointmentProvider } from "./context/AppointmentContext";
+import favicon from "../public/favicon.svg";
 import "./index.css";
 
 const App = () => {
@@ -52,7 +53,7 @@ const App = () => {
                       to="/"
                       className="flex items-center space-x-3 px-2 hover:opacity-80 transition-opacity"
                     >
-                      <span className="text-2xl">🏥</span>
+                      <img src={favicon} alt="MediElite Logo" className="w-8 h-8" />
                       <span className="gradient-text text-xl font-bold">
                         MediElite
                       </span>
