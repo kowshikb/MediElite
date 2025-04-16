@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#065F46"/> <!-- emerald-800 -->
+      <stop offset="100%" stop-color="#22C55E"/> <!-- green-600 -->
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg-gradient)"/>
+  <text x="50%" y="50%" text-anchor="middle" dy=".35em" font-size="32" fill="#fff" font-family="Arial, Helvetica, sans-serif">M</text>
+</svg>
