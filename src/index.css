@@ -276,6 +276,12 @@ body {
   .nav-link.active {
     @apply bg-emerald-50 text-emerald-600 shadow-sm;
   }
+
+  /* Stylish and interactive quick link button */
+  .quick-link-btn {
+    @apply bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg rounded-full p-3 transition-all duration-300 hover:from-emerald-600 hover:to-teal-600 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-emerald-300;
+    box-shadow: 0 4px 16px 0 rgba(16, 185, 129, 0.15);
+  }
 }
 
 /* Reset hover styles for no-hover buttons */

@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
+import { FaInfoCircle, FaFileContract, FaShieldAlt } from "react-icons/fa";
+import logo from "../../public/favicon.svg"; // Import the logo
 
 const EnhancedLanding = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
+  const sliderRef = useRef();
+  const [sliderPosition, setSliderPosition] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
+  const sliderMax = 220; // width of container (256px) - handle (36px)
 
   useEffect(() => {
     setIsLoaded(true);
@@ -38,7 +44,7 @@ const EnhancedLanding = () => {
             <h2 className="text-2xl font-bold text-white">{title}</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white"
+              className="text-white-400 hover:text-white"
             >
               <svg
                 className="w-6 h-6"
@@ -218,21 +224,22 @@ const EnhancedLanding = () => {
   );
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      {/* Background Video */}
-      <video
-        className="hero-video absolute top-0 left-0 w-full h-full object-cover z-0"
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src="/path-to-your-video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="relative min-h-screen text-white overflow-hidden" style={{ background: "linear-gradient(to right, #134E4A, #10B981)" }}>
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 to-black"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-green-400 to-teal-500 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-400 to-green-500 opacity-20 rounded-full blur-2xl translate-x-1/2 translate-y-1/2"></div>
+      </div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/80 z-10" />
+      {/* Top-left Logo and Text */}
+      <div className="absolute top-8 left-8 z-10 flex items-center space-x-4">
+        <img src={logo} alt="MediElite Logo" className="w-12 h-12" />
+        <div>
+          <h1 className="text-2xl font-bold">MediElite</h1>
+          <p className="text-sm text-gray-300">Revolutionizing Healthcare</p>
+        </div>
+      </div>
 
       {/* Hero Content */}
       <motion.div
@@ -244,25 +251,143 @@ const EnhancedLanding = () => {
         <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg">
           Welcome to MediElite
         </h1>
-        <p className="mt-6 text-lg md:text-2xl text-gray-200 max-w-2xl mx-auto">
-          Revolutionizing healthcare with cutting-edge technology and
-          personalized care.
-        </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/client/dashboard")}
-            className="px-8 py-4 bg-gradient-to-r from-green-400 to-teal-500 text-white font-bold rounded-xl shadow-lg text-lg tracking-wide hover:shadow-emerald-400/40 transition-all focus:outline-none focus:ring-4 focus:ring-emerald-400"
+          {/* iPhone-style Slide to Start */}
+          <div
+            ref={sliderRef}
+            className="relative w-64 h-12 bg-gray-800 rounded-full overflow-hidden select-none"
+            style={{ userSelect: "none" }}
           >
-            Get Started
-          </motion.button>
+            <span className="absolute inset-0 flex items-center justify-center text-white font-bold z-10 pointer-events-none">
+              Slide to Start
+            </span>
+            {/* Animated thin arrow */}
+            <span className="absolute left-10 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
+              <svg
+                width="32"
+                height="16"
+                viewBox="0 0 32 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <rect
+                    x="0"
+                    y="7"
+                    width="24"
+                    height="2"
+                    rx="1"
+                    fill="#fff"
+                    opacity="0.7"
+                  >
+                    <animate
+                      attributeName="x"
+                      values="0;8;0"
+                      dur="1.2s"
+                      repeatCount="indefinite"
+                    />
+                  </rect>
+                  <polygon points="24,4 32,8 24,12" fill="#fff" opacity="0.9">
+                    <animate
+                      attributeName="points"
+                      values="24,4 32,8 24,12;28,4 32,8 28,12;24,4 32,8 24,12"
+                      dur="1.2s"
+                      repeatCount="indefinite"
+                    />
+                  </polygon>
+                </g>
+              </svg>
+            </span>
+            {/* Slider handle */}
+            <div
+              className="absolute top-1/2 -translate-y-1/2 left-0 w-9 h-9 bg-green-500 rounded-full shadow-lg cursor-pointer z-20 flex items-center justify-center transition-colors duration-200"
+              style={{
+                transform: `translateY(-50%) translateX(${sliderPosition}px)`,
+              }}
+              onMouseDown={(e) => {
+                setIsSliding(true);
+                const sliderRect = sliderRef.current.getBoundingClientRect();
+                const handleWidth = 36;
+                const onMouseMove = (moveEvent) => {
+                  let x = moveEvent.clientX - sliderRect.left - handleWidth / 2;
+                  x = Math.max(0, Math.min(x, sliderMax));
+                  setSliderPosition(x);
+                  if (x >= sliderMax) {
+                    setIsSliding(false);
+                    setSliderPosition(sliderMax);
+                    document.removeEventListener("mousemove", onMouseMove);
+                    document.removeEventListener("mouseup", onMouseUp);
+                    setTimeout(() => navigate("/client/dashboard"), 100); // instant navigation
+                  }
+                };
+                const onMouseUp = () => {
+                  if (sliderPosition < sliderMax) setSliderPosition(0);
+                  setIsSliding(false);
+                  document.removeEventListener("mousemove", onMouseMove);
+                  document.removeEventListener("mouseup", onMouseUp);
+                };
+                document.addEventListener("mousemove", onMouseMove);
+                document.addEventListener("mouseup", onMouseUp);
+              }}
+              onTouchStart={(e) => {
+                setIsSliding(true);
+                const sliderRect = sliderRef.current.getBoundingClientRect();
+                const handleWidth = 36;
+                const onTouchMove = (moveEvent) => {
+                  let x =
+                    moveEvent.touches[0].clientX -
+                    sliderRect.left -
+                    handleWidth / 2;
+                  x = Math.max(0, Math.min(x, sliderMax));
+                  setSliderPosition(x);
+                  if (x >= sliderMax) {
+                    setIsSliding(false);
+                    setSliderPosition(sliderMax);
+                    document.removeEventListener("touchmove", onTouchMove);
+                    document.removeEventListener("touchend", onTouchEnd);
+                    setTimeout(() => navigate("/client/dashboard"), 100);
+                  }
+                };
+                const onTouchEnd = () => {
+                  if (sliderPosition < sliderMax) setSliderPosition(0);
+                  setIsSliding(false);
+                  document.removeEventListener("touchmove", onTouchMove);
+                  document.removeEventListener("touchend", onTouchEnd);
+                };
+                document.addEventListener("touchmove", onTouchMove);
+                document.addEventListener("touchend", onTouchEnd);
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="9"
+                  cy="9"
+                  r="8"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  fill="none"
+                />
+                <polygon points="7,5 13,9 7,13" fill="#fff" />
+              </svg>
+            </div>
+          </div>
         </div>
       </motion.div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-green-400 to-teal-500 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-400 to-green-500 opacity-20 rounded-full blur-2xl translate-x-1/2 translate-y-1/2"></div>
+      {/* Semi-transparent Watermark */}
+      <div className="absolute right-0 top-1/4 transform -translate-y-1/2 translate-x-1/4 opacity-10">
+        <img
+          src={logo}
+          alt="MediElite Watermark"
+          className="w-[500px] h-[500px] rotate-[-15deg]"
+        />
+      </div>
 
       {/* Footer */}
       <div className="relative z-20 w-full py-8 border-t border-white/10 bg-black/30 backdrop-blur-md">
@@ -279,32 +404,29 @@ const EnhancedLanding = () => {
               <h3 className="text-lg font-semibold text-emerald-400">
                 Quick Links
               </h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <button
-                    onClick={() => setActiveModal("about")}
-                    className="text-gray-300 hover:text-emerald-400 transition-colors"
-                  >
-                    About Us
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => setActiveModal("terms")}
-                    className="text-gray-300 hover:text-emerald-400 transition-colors"
-                  >
-                    Terms & Conditions
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => setActiveModal("privacy")}
-                    className="text-gray-300 hover:text-emerald-400 transition-colors"
-                  >
-                    Privacy Policy
-                  </button>
-                </li>
-              </ul>
+              <div className="flex gap-4 items-center">
+                <button
+                  onClick={() => setActiveModal("about")}
+                  className="quick-link-btn"
+                  title="About Us"
+                >
+                  <FaInfoCircle className="text-2xl" />
+                </button>
+                <button
+                  onClick={() => setActiveModal("terms")}
+                  className="quick-link-btn"
+                  title="Terms & Conditions"
+                >
+                  <FaFileContract className="text-2xl" />
+                </button>
+                <button
+                  onClick={() => setActiveModal("privacy")}
+                  className="quick-link-btn"
+                  title="Privacy Policy"
+                >
+                  <FaShieldAlt className="text-2xl" />
+                </button>
+              </div>
             </div>
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-emerald-400">
