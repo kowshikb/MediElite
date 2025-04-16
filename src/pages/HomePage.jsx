@@ -5,13 +5,12 @@ import { gsap } from "gsap";
 import { FaInfoCircle, FaFileContract, FaShieldAlt } from "react-icons/fa";
 import logo from "../../public/favicon.svg"; // Import the logo
 
-const EnhancedLanding = () => {
+const HomePage = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const sliderRef = useRef();
   const [sliderPosition, setSliderPosition] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
   const sliderMax = 220; // width of container (256px) - handle (36px)
 
   useEffect(() => {
@@ -317,7 +316,6 @@ const EnhancedLanding = () => {
                 transform: `translateY(-50%) translateX(${sliderPosition}px)`,
               }}
               onMouseDown={(e) => {
-                setIsSliding(true);
                 const sliderRect = sliderRef.current.getBoundingClientRect();
                 const handleWidth = 36;
                 const onMouseMove = (moveEvent) => {
@@ -325,7 +323,6 @@ const EnhancedLanding = () => {
                   x = Math.max(0, Math.min(x, sliderMax));
                   setSliderPosition(x);
                   if (x >= sliderMax) {
-                    setIsSliding(false);
                     setSliderPosition(sliderMax);
                     document.removeEventListener("mousemove", onMouseMove);
                     document.removeEventListener("mouseup", onMouseUp);
@@ -334,7 +331,6 @@ const EnhancedLanding = () => {
                 };
                 const onMouseUp = () => {
                   if (sliderPosition < sliderMax) setSliderPosition(0);
-                  setIsSliding(false);
                   document.removeEventListener("mousemove", onMouseMove);
                   document.removeEventListener("mouseup", onMouseUp);
                 };
@@ -342,7 +338,6 @@ const EnhancedLanding = () => {
                 document.addEventListener("mouseup", onMouseUp);
               }}
               onTouchStart={(e) => {
-                setIsSliding(true);
                 const sliderRect = sliderRef.current.getBoundingClientRect();
                 const handleWidth = 36;
                 const onTouchMove = (moveEvent) => {
@@ -353,7 +348,6 @@ const EnhancedLanding = () => {
                   x = Math.max(0, Math.min(x, sliderMax));
                   setSliderPosition(x);
                   if (x >= sliderMax) {
-                    setIsSliding(false);
                     setSliderPosition(sliderMax);
                     document.removeEventListener("touchmove", onTouchMove);
                     document.removeEventListener("touchend", onTouchEnd);
@@ -362,7 +356,6 @@ const EnhancedLanding = () => {
                 };
                 const onTouchEnd = () => {
                   if (sliderPosition < sliderMax) setSliderPosition(0);
-                  setIsSliding(false);
                   document.removeEventListener("touchmove", onTouchMove);
                   document.removeEventListener("touchend", onTouchEnd);
                 };
@@ -402,15 +395,9 @@ const EnhancedLanding = () => {
       <div className="relative z-20 w-full py-8 border-t border-white/10 bg-black/40 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* Quick Links - Moved to the left */}
             <div className="space-y-3 flex flex-col items-center md:items-start justify-center">
-              <h3 className="text-xl font-bold text-emerald-300">MediElite</h3>
-              <p className="text-emerald-100 text-sm">
-                Transforming healthcare experiences through innovative
-                technology and patient-centered care.
-              </p>
-            </div>
-            <div className="space-y-3 flex flex-col items-center justify-center">
-              <h3 className="text-lg font-semibold text-emerald-300 text-center">
+              <h3 className="text-lg font-semibold text-emerald-300">
                 Quick Links
               </h3>
               <div className="flex gap-4 items-center justify-center">
@@ -437,6 +424,52 @@ const EnhancedLanding = () => {
                 </button>
               </div>
             </div>
+
+            {/* Social Media - Centered */}
+            <div className="flex justify-center gap-4">
+              <a
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-media-icon"
+              >
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="https://www.youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-media-icon"
+              >
+                <i className="fab fa-youtube"></i>
+              </a>
+              <a
+                href="https://www.x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-media-icon"
+              >
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-media-icon"
+              >
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-media-icon"
+              >
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+
+            {/* Contact - Right aligned */}
             <div className="space-y-3 flex flex-col items-center md:items-end justify-center">
               <h3 className="text-lg font-semibold text-emerald-300">
                 Contact
@@ -486,4 +519,4 @@ const EnhancedLanding = () => {
   );
 };
 
-export default EnhancedLanding;
+export default HomePage;

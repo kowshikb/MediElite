@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Added Font Awesome for social media icons */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+
 :root {
   /* Updated color palette with emerald/green gradients */
   --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
@@ -281,6 +284,17 @@ body {
   .quick-link-btn {
     @apply bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg rounded-full p-3 transition-all duration-300 hover:from-emerald-600 hover:to-teal-600 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-emerald-300;
     box-shadow: 0 4px 16px 0 rgba(16, 185, 129, 0.15);
+  }
+
+  /* Updated social media icons to have white color and hover effects */
+  .social-media-icon {
+    color: white !important; /* Force white color for icons */
+    transition: transform 0.3s ease;
+  }
+
+  .social-media-icon:hover {
+    transform: scale(1.2);
+    color: white !important; /* Ensure no color change on hover */
   }
 }
 

@@ -5,8 +5,8 @@ import HomePage from "./pages/HomePage";
 import Dashboard from "./pages/Dashboard";
 import ClientProfile from "./pages/ClientProfile";
 import DoctorDirectory from "./pages/DoctorDirectory";
-import AppointmentPage from "./pages/AppointmentPage";
 import ReportsAndClaims from "./pages/ReportsAndClaims";
+import SupportFeedback from "./pages/SupportFeedback";
 
 const AppRoutes = ({ userRole }) => {
   return (
@@ -32,11 +32,7 @@ const AppRoutes = ({ userRole }) => {
       <Route path="/client/profile" element={<ClientProfile />} />
       <Route path="/client/find-doctor" element={<DoctorDirectory />} />
       <Route path="/client/reports-claims" element={<ReportsAndClaims />} />
-
-      {/* Doctor Routes */}
-
-      <Route path="/doctor/appointments" element={<AppointmentPage />} />
-      <Route path="/doctor/patients" element={<ClientProfile />} />
+      <Route path="/client/support-feedback" element={<SupportFeedback />} />
 
       {/* Catch-all route for 404 */}
       <Route

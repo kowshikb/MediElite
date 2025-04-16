@@ -88,6 +88,15 @@ const ClientProfile = () => {
               <span className="text-lg">📤</span>
               Share Profile
             </motion.button>
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="/client/support-feedback"
+              className="bg-white/90 text-blue-600 hover:bg-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2"
+            >
+              <span className="text-lg">🧩</span>
+              Support & Feedback
+            </motion.a>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
