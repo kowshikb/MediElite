@@ -83,4 +83,4 @@ const prescriptions = [
   },
 ];
 
-export default prescriptions;
+module.exports = prescriptions;

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DoctorCard from "../components/DoctorCard";
-import doctorsData from "../data/doctors.json";
+import LoadingSpinner from "../components/LoadingSpinner"; // Assuming you have a loading spinner
 
 const DoctorDirectory = () => {
   const [doctors, setDoctors] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [error, setError] = useState(null); // Add error state
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
   const [selectedLanguage, setSelectedLanguage] = useState("all");
@@ -12,7 +14,25 @@ const DoctorDirectory = () => {
   const [sortBy, setSortBy] = useState("rating");
 
   useEffect(() => {
-    setDoctors(doctorsData.doctors || []);
+    const fetchDoctors = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch("/api/data/doctors");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setDoctors(data.doctors || data); // Adjust based on actual API response structure
+      } catch (e) {
+        console.error("Failed to fetch doctors:", e);
+        setError("Failed to load doctors. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDoctors();
   }, []);
 
   const resetFilters = () => {
@@ -25,11 +45,11 @@ const DoctorDirectory = () => {
 
   const specialties = [
     "all",
-    ...new Set(doctors.map((doctor) => doctor.specialty)),
+    ...new Set((doctors || []).map((doctor) => doctor.specialty)),
   ];
   const languages = [
     "all",
-    ...new Set(doctors.flatMap((doctor) => doctor.languages)),
+    ...new Set((doctors || []).flatMap((doctor) => doctor.languages)),
   ];
 
   const sortDoctors = (docs) => {
@@ -48,16 +68,17 @@ const DoctorDirectory = () => {
   };
 
   const filteredDoctors = sortDoctors(
-    doctors.filter((doctor) => {
+    (doctors || []).filter((doctor) => {
       const matchesSearch =
         doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doctor.subspecialty.toLowerCase().includes(searchTerm.toLowerCase());
+        (doctor.subspecialty &&
+          doctor.subspecialty.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesSpecialty =
         selectedSpecialty === "all" || doctor.specialty === selectedSpecialty;
       const matchesLanguage =
         selectedLanguage === "all" ||
-        doctor.languages.includes(selectedLanguage);
+        (doctor.languages && doctor.languages.includes(selectedLanguage));
       const matchesAvailability = !isAvailableOnly || doctor.availability;
       return (
         matchesSearch &&
@@ -67,6 +88,14 @@ const DoctorDirectory = () => {
       );
     })
   );
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div className="p-6 text-red-600">{error}</div>;
+  }
 
   return (
     <motion.div

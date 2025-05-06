@@ -1,28 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { FaInfoCircle, FaFileContract, FaShieldAlt } from "react-icons/fa";
-import logo from "../../public/favicon.svg"; // Import the logo
+import {
+  FaInfoCircle,
+  FaFileContract,
+  FaShieldAlt,
+  FaSignInAlt,
+  FaUserPlus,
+} from "react-icons/fa";
+// Use the path directly, don't import assets from public
+const logo = "/favicon.svg";
+import LoginForm from "../components/LoginForm";
+import SignupForm from "../components/SignupForm";
 
 const HomePage = () => {
-  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
-  const sliderRef = useRef();
-  const [sliderPosition, setSliderPosition] = useState(0);
-  const sliderMax = 220; // width of container (256px) - handle (36px)
+  const [authMode, setAuthMode] = useState(null);
 
   useEffect(() => {
     setIsLoaded(true);
     gsap.fromTo(
-      ".hero-video",
-      { opacity: 0 },
-      { opacity: 1, duration: 2, ease: "power2.out" }
+      ".hero-content",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: 0.2 }
     );
   }, []);
 
-  // Modal component for displaying additional information
   const InfoModal = ({ title, content, onClose }) => (
     <motion.div
       className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
@@ -41,12 +45,9 @@ const HomePage = () => {
         <div className="p-6 border-b border-gray-700">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-white">{title}</h2>
-            <button
-              onClick={onClose}
-              className="text-white-400 hover:text-white"
-            >
+            <button onClick={onClose} className="text-white p-1">
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -222,6 +223,8 @@ const HomePage = () => {
     </div>
   );
 
+  const handleAuthCancel = () => setAuthMode(null);
+
   return (
     <div
       className="relative min-h-screen text-white overflow-hidden"
@@ -230,14 +233,12 @@ const HomePage = () => {
           "linear-gradient(90deg, #134E4A 0%, #059669 40%, #10B981 100%)",
       }}
     >
-      {/* Background Overlays for depth and premium look */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-black/70 via-transparent to-emerald-900/40"></div>
         <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-green-400 to-teal-500 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-br from-teal-400 to-green-500 opacity-20 rounded-full blur-2xl translate-x-1/2 translate-y-1/2"></div>
       </div>
 
-      {/* Top-left Logo and Text */}
       <div className="absolute top-8 left-8 z-10 flex items-center space-x-4">
         <img
           src={logo}
@@ -252,136 +253,53 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Hero Content */}
       <motion.div
-        className="relative z-20 flex flex-col items-center justify-center h-screen text-center px-4"
+        className="hero-content relative z-20 flex flex-col items-center justify-center h-screen text-center px-4"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-xl">
-          Welcome to MediElite
-        </h1>
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          {/* iPhone-style Slide to Start */}
-          <div
-            ref={sliderRef}
-            className="relative w-64 h-12 bg-black/40 rounded-full overflow-hidden select-none shadow-xl border border-white/10"
-            style={{ userSelect: "none" }}
-          >
-            <span className="absolute inset-0 flex items-center justify-center text-white font-bold z-10 pointer-events-none drop-shadow-lg">
-              Slide to Start
-            </span>
-            {/* Animated thin arrow */}
-            <span className="absolute left-10 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-              <svg
-                width="32"
-                height="16"
-                viewBox="0 0 32 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+        {authMode === "login" ? (
+          <LoginForm
+            onClose={handleAuthCancel}
+            onSwitchToSignup={() => setAuthMode("signup")}
+            onSuccess={handleAuthCancel}
+          />
+        ) : authMode === "signup" ? (
+          <SignupForm
+            onClose={handleAuthCancel}
+            onSwitchToLogin={() => setAuthMode("login")}
+            onSuccess={handleAuthCancel}
+          />
+        ) : (
+          <>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-xl mb-6">
+              Welcome to MediElite
+            </h1>
+            <p className="text-lg md:text-xl text-emerald-200 mb-10 max-w-2xl">
+              Your seamless connection to healthcare. Manage appointments,
+              records, and more, all in one place.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => setAuthMode("login")}
+                className="flex items-center justify-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition duration-300 ease-in-out shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
               >
-                <g>
-                  <rect
-                    x="0"
-                    y="7"
-                    width="24"
-                    height="2"
-                    rx="1"
-                    fill="#fff"
-                    opacity="0.7"
-                  >
-                    <animate
-                      attributeName="x"
-                      values="0;8;0"
-                      dur="1.2s"
-                      repeatCount="indefinite"
-                    />
-                  </rect>
-                  <polygon points="24,4 32,8 24,12" fill="#fff" opacity="0.9">
-                    <animate
-                      attributeName="points"
-                      values="24,4 32,8 24,12;28,4 32,8 28,12;24,4 32,8 24,12"
-                      dur="1.2s"
-                      repeatCount="indefinite"
-                    />
-                  </polygon>
-                </g>
-              </svg>
-            </span>
-            {/* Slider handle */}
-            <div
-              className="absolute top-1/2 -translate-y-1/2 left-0 w-9 h-9 bg-gradient-to-br from-emerald-500 to-green-400 rounded-full shadow-lg cursor-pointer z-20 flex items-center justify-center border-2 border-white/30"
-              style={{
-                transform: `translateY(-50%) translateX(${sliderPosition}px)`,
-              }}
-              onMouseDown={(e) => {
-                const sliderRect = sliderRef.current.getBoundingClientRect();
-                const handleWidth = 36;
-                const onMouseMove = (moveEvent) => {
-                  let x = moveEvent.clientX - sliderRect.left - handleWidth / 2;
-                  x = Math.max(0, Math.min(x, sliderMax));
-                  setSliderPosition(x);
-                  if (x >= sliderMax) {
-                    setSliderPosition(sliderMax);
-                    document.removeEventListener("mousemove", onMouseMove);
-                    document.removeEventListener("mouseup", onMouseUp);
-                    setTimeout(() => navigate("/client/dashboard"), 100); // instant navigation
-                  }
-                };
-                const onMouseUp = () => {
-                  if (sliderPosition < sliderMax) setSliderPosition(0);
-                  document.removeEventListener("mousemove", onMouseMove);
-                  document.removeEventListener("mouseup", onMouseUp);
-                };
-                document.addEventListener("mousemove", onMouseMove);
-                document.addEventListener("mouseup", onMouseUp);
-              }}
-              onTouchStart={(e) => {
-                const sliderRect = sliderRef.current.getBoundingClientRect();
-                const handleWidth = 36;
-                const onTouchMove = (moveEvent) => {
-                  let x =
-                    moveEvent.touches[0].clientX -
-                    sliderRect.left -
-                    handleWidth / 2;
-                  x = Math.max(0, Math.min(x, sliderMax));
-                  setSliderPosition(x);
-                  if (x >= sliderMax) {
-                    setSliderPosition(sliderMax);
-                    document.removeEventListener("touchmove", onTouchMove);
-                    document.removeEventListener("touchend", onTouchEnd);
-                    setTimeout(() => navigate("/client/dashboard"), 100);
-                  }
-                };
-                const onTouchEnd = () => {
-                  if (sliderPosition < sliderMax) setSliderPosition(0);
-                  document.removeEventListener("touchmove", onTouchMove);
-                  document.removeEventListener("touchend", onTouchEnd);
-                };
-                document.addEventListener("touchmove", onTouchMove);
-                document.addEventListener("touchend", onTouchEnd);
-              }}
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                <FaSignInAlt />
+                Login
+              </button>
+              <button
+                onClick={() => setAuthMode("signup")}
+                className="flex items-center justify-center gap-2 px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-lg transition duration-300 ease-in-out shadow-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+                <FaUserPlus />
+                Sign Up
+              </button>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </motion.div>
 
-      {/* Semi-transparent Watermark */}
       <div className="absolute right-0 top-1/4 transform -translate-y-1/2 translate-x-1/4 opacity-70 drop-shadow-[0_0_70px_white]">
         <img
           src={logo}
@@ -391,11 +309,9 @@ const HomePage = () => {
         />
       </div>
 
-      {/* Footer */}
       <div className="relative z-20 w-full py-8 border-t border-white/10 bg-black/40 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* Quick Links - Moved to the left */}
             <div className="space-y-3 flex flex-col items-center md:items-start justify-center">
               <h3 className="text-lg font-semibold text-emerald-300">
                 Quick Links
@@ -425,7 +341,6 @@ const HomePage = () => {
               </div>
             </div>
 
-            {/* Social Media - Centered */}
             <div className="flex justify-center gap-4">
               <a
                 href="https://www.facebook.com"
@@ -469,7 +384,6 @@ const HomePage = () => {
               </a>
             </div>
 
-            {/* Contact - Right aligned */}
             <div className="space-y-3 flex flex-col items-center md:items-end justify-center">
               <h3 className="text-lg font-semibold text-emerald-300">
                 Contact
@@ -493,28 +407,29 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Modals */}
-      {activeModal === "about" && (
-        <InfoModal
-          title="About Us"
-          content={aboutUsContent}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
-      {activeModal === "terms" && (
-        <InfoModal
-          title="Terms and Conditions"
-          content={termsContent}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
-      {activeModal === "privacy" && (
-        <InfoModal
-          title="Privacy Policy"
-          content={privacyContent}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
+      <AnimatePresence>
+        {activeModal === "about" && (
+          <InfoModal
+            title="About Us"
+            content={aboutUsContent}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
+        {activeModal === "terms" && (
+          <InfoModal
+            title="Terms and Conditions"
+            content={termsContent}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
+        {activeModal === "privacy" && (
+          <InfoModal
+            title="Privacy Policy"
+            content={privacyContent}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

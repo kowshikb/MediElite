@@ -35,4 +35,4 @@ const medicalHistory = [
   },
 ];
 
-export default medicalHistory;
+module.exports = medicalHistory;

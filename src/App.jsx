@@ -4,13 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import AppRoutes from "./routes";
 import { NotificationContext } from "./components/AppointmentCalendar";
 import { AppointmentProvider } from "./context/AppointmentContext";
-import favicon from "../public/favicon.svg";
 import "./index.css";
+import { useAuth } from "./context/AuthContext";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const App = () => {
   const [userRole, setUserRole] = useState("client");
   const [notification, setNotification] = useState(null);
   const location = useLocation();
+  const { isAuthenticated, loading } = useAuth();
 
   const addNotification = (message, type = "info") => {
     setNotification({ id: Date.now(), message, type });
@@ -37,23 +39,32 @@ const App = () => {
     },
   };
 
-  // Hide navigation on landing page
-  const isLandingPage = location.pathname === "/";
+  // Only show navigation when user is authenticated and on a client route
+  const showNavigation =
+    isAuthenticated && location.pathname.startsWith("/client");
+
+  // Wait for auth check before rendering the main app
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-emerald-50/30">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <AppointmentProvider>
       <NotificationContext.Provider value={notificationContextValue}>
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30">
-          {!isLandingPage && (
+          {showNavigation && (
             <nav className="bg-white/80 backdrop-blur-lg fixed w-full z-50 border-b border-gray-100">
               <div className="max-w-7xl mx-auto px-4">
                 <div className="flex justify-between h-16">
                   <div className="flex">
                     <Link
-                      to="/"
+                      to="/client/dashboard"
                       className="flex items-center space-x-3 px-2 hover:opacity-80 transition-opacity"
                     >
-                      <img src={favicon} alt="MediElite Logo" className="w-8 h-8" />
                       <span className="gradient-text text-xl font-bold">
                         MediElite
                       </span>
@@ -78,7 +89,7 @@ const App = () => {
             </nav>
           )}
 
-          {!isLandingPage && (
+          {showNavigation && (
             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 z-50">
               <div className="grid grid-cols-4 gap-1 p-2">
                 {navigation[userRole].map((item) => (
@@ -99,7 +110,7 @@ const App = () => {
             </div>
           )}
 
-          <main className={isLandingPage ? "" : "pt-16 pb-16 md:pb-0"}>
+          <main className={showNavigation ? "pt-16 pb-16 md:pb-0" : ""}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -108,7 +119,7 @@ const App = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <AppRoutes userRole={userRole} />
+                <AppRoutes />
               </motion.div>
             </AnimatePresence>
           </main>

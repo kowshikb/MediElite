@@ -49,4 +49,4 @@ const medicalBills = [
   },
 ];
 
-export default medicalBills;
+module.exports = medicalBills;

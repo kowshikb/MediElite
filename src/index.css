@@ -1,9 +1,9 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Added Font Awesome for social media icons */
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
+/* Added Font Awesome for social media icons - moved import to top */
 
 :root {
   /* Updated color palette with emerald/green gradients */

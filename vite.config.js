@@ -21,6 +21,15 @@ export default defineConfig({
     strictPort: true,
     host: "0.0.0.0",
     open: true,
+    proxy: {
+      // Proxy /api requests to the backend server
+      "/api": {
+        target: "http://localhost:5001", // Your backend server address
+        changeOrigin: true,
+        // secure: false, // Uncomment if backend is not using HTTPS
+        // rewrite: (path) => path.replace(/^\/api/, '') // Uncomment if backend routes don't have /api prefix
+      },
+    },
   },
   build: {
     outDir: "dist",

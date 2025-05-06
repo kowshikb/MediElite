@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const ClientProfile = () => {
+  const { user, logout } = useAuth(); // Get user and logout function
   const [isEditing, setIsEditing] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showFlyaway, setShowFlyaway] = useState(false);
@@ -25,9 +27,14 @@ const ClientProfile = () => {
     setTimeout(() => setShowFlyaway(false), 3000);
   };
 
-  const user = {
-    name: "kowshik kumar",
-    email: "kowshik.kumar@example.com",
+  const handleLogout = () => {
+    logout();
+    // No need to navigate here, AuthContext change will trigger redirect via ProtectedRoute
+  };
+
+  const profileData = {
+    name: user?.name || "kowshik kumar",
+    email: user?.email || "kowshik.kumar@example.com",
     dob: "1990-05-15",
     gender: "Male",
     phone: "+1 (555) 123-4567",
@@ -41,6 +48,8 @@ const ClientProfile = () => {
       relation: "Spouse",
       phone: "+1 (555) 987-6543",
     },
+    memberSince: "Jan 2023",
+    plan: "MediElite Gold",
   };
 
   return (
@@ -58,7 +67,7 @@ const ClientProfile = () => {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white capitalize">
-                {user.name}
+                {profileData.name}
               </h1>
               <p className="text-blue-100 text-sm md:text-base">
                 View and manage your profile
@@ -74,29 +83,38 @@ const ClientProfile = () => {
                 isEditing
                   ? "bg-white text-blue-600 hover:bg-gray-100"
                   : "bg-white/90 text-blue-600 hover:bg-white"
-              } px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2`}
+              } px-3 py-1.5 rounded-lg font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-1.5`}
             >
-              <span className="text-lg">✏️</span>
+              <span className="text-base">✏️</span>
               {isEditing ? "Save Changes" : "Edit Profile"}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleShare}
-              className="bg-white/90 text-blue-600 hover:bg-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2"
+              className="bg-white/90 text-blue-600 hover:bg-white px-3 py-1.5 rounded-lg font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-1.5"
             >
-              <span className="text-lg">📤</span>
+              <span className="text-base">📤</span>
               Share Profile
             </motion.button>
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="/client/support-feedback"
-              className="bg-white/90 text-blue-600 hover:bg-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-2"
+              className="bg-white/90 text-blue-600 hover:bg-white px-3 py-1.5 rounded-lg font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-1.5"
             >
-              <span className="text-lg">🧩</span>
+              <span className="text-base">🧩</span>
               Support & Feedback
             </motion.a>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLogout}
+              className="bg-red-600 text-white hover:bg-red-700 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 hover:shadow-lg text-sm flex items-center gap-1.5"
+            >
+              <span className="text-base">🚪</span>
+              Logout
+            </motion.button>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-400 rounded-full filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
@@ -137,7 +155,7 @@ const ClientProfile = () => {
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-900">
-                  Share {user.name}'s Profile Summary
+                  Share {profileData.name}'s Profile Summary
                 </h3>
                 <button
                   onClick={() => setShowShareModal(false)}
@@ -166,14 +184,14 @@ const ClientProfile = () => {
                     <span className="text-2xl">🩸</span>
                     <div>
                       <p className="text-sm text-gray-600">Blood Type</p>
-                      <p className="font-medium">{user.bloodType}</p>
+                      <p className="font-medium">{profileData.bloodType}</p>
                     </div>
                   </div>
 
                   <div className="border-t border-gray-200 pt-3">
                     <h4 className="font-medium mb-2">Medical Conditions</h4>
                     <div className="flex flex-wrap gap-2">
-                      {user.conditions.map((condition) => (
+                      {profileData.conditions.map((condition) => (
                         <span
                           key={condition}
                           className="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm"
@@ -187,7 +205,7 @@ const ClientProfile = () => {
                   <div className="border-t border-gray-200 pt-3">
                     <h4 className="font-medium mb-2">Current Medications</h4>
                     <div className="flex flex-wrap gap-2">
-                      {user.medications.map((med) => (
+                      {profileData.medications.map((med) => (
                         <span
                           key={med}
                           className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm"
@@ -201,7 +219,7 @@ const ClientProfile = () => {
                   <div className="border-t border-gray-200 pt-3">
                     <h4 className="font-medium mb-2">Allergies</h4>
                     <div className="flex flex-wrap gap-2">
-                      {user.allergies.map((allergy) => (
+                      {profileData.allergies.map((allergy) => (
                         <span
                           key={allergy}
                           className="px-2 py-1 bg-red-50 text-red-700 rounded-lg text-sm"
@@ -257,7 +275,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user.name}
+                  defaultValue={profileData.name}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -268,7 +286,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="email"
-                  defaultValue={user.email}
+                  defaultValue={profileData.email}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -279,7 +297,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="tel"
-                  defaultValue={user.phone}
+                  defaultValue={profileData.phone}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -289,7 +307,7 @@ const ClientProfile = () => {
                   Address
                 </label>
                 <textarea
-                  defaultValue={user.address}
+                  defaultValue={profileData.address}
                   disabled={!isEditing}
                   rows={2}
                   className="input-field bg-white"
@@ -310,7 +328,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user.emergencyContact.name}
+                  defaultValue={profileData.emergencyContact.name}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -321,7 +339,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user.emergencyContact.relation}
+                  defaultValue={profileData.emergencyContact.relation}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -332,7 +350,7 @@ const ClientProfile = () => {
                 </label>
                 <input
                   type="tel"
-                  defaultValue={user.emergencyContact.phone}
+                  defaultValue={profileData.emergencyContact.phone}
                   disabled={!isEditing}
                   className="input-field bg-white"
                 />
@@ -363,7 +381,7 @@ const ClientProfile = () => {
                       Blood Type
                     </p>
                     <p className="text-2xl font-semibold text-blue-600">
-                      {user.bloodType}
+                      {profileData.bloodType}
                     </p>
                   </div>
                 </div>
@@ -373,7 +391,7 @@ const ClientProfile = () => {
                     Allergies
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {user.allergies.map((allergy) => (
+                    {profileData.allergies.map((allergy) => (
                       <span
                         key={allergy}
                         className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium inline-flex items-center"
@@ -392,7 +410,7 @@ const ClientProfile = () => {
                   Current Medications
                 </h3>
                 <div className="grid gap-3">
-                  {user.medications.map((medication) => (
+                  {profileData.medications.map((medication) => (
                     <div
                       key={medication}
                       className="flex items-center p-3 bg-blue-50 rounded-xl"
@@ -412,7 +430,7 @@ const ClientProfile = () => {
                   Medical Conditions
                 </h3>
                 <div className="grid gap-3">
-                  {user.conditions.map((condition) => (
+                  {profileData.conditions.map((condition) => (
                     <div
                       key={condition}
                       className="flex items-center p-3 bg-blue-50 rounded-xl"

@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "type": "appointment",
+        "message": "Your appointment with Dr. Smith is confirmed for tomorrow at 10:00 AM.",
+        "timestamp": "2025-04-17T15:30:00Z",
+        "read": false
+    },
+    {
+        "id": 2,
+        "type": "report",
+        "message": "Your recent blood test results are available.",
+        "timestamp": "2025-04-16T09:15:00Z",
+        "read": false
+    },
+    {
+        "id": 3,
+        "type": "prescription",
+        "message": "New prescription added: Metformin 500mg.",
+        "timestamp": "2025-04-15T11:00:00Z",
+        "read": true
+    },
+    {
+        "id": 4,
+        "type": "claim",
+        "message": "Your insurance claim #CLM12345 has been processed.",
+        "timestamp": "2025-04-14T16:45:00Z",
+        "read": true
+    }
+]
